@@ -12,6 +12,8 @@ CREATE TABLE `eack_xoa`.`users`
     `phone_number` VARCHAR(16)  NOT NULL,
     `bio`          VARCHAR(256) NOT NULL,
     `birth_date`   DATE         NOT NULL,
+    `is_active`    BOOL         NOT NULL,
+    `is_deleted`   BOOL         NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
@@ -35,6 +37,9 @@ CREATE TABLE `eack_xoa`.`profiles`
     `notifications`    JSON     NOT NULL,
     `groups`           JSON     NOT NULL,
     `chats`            JSON     NOT NULL,
+    `private_state`    BOOL     NOT NULL,
+    `info_state`       BOOL     NOT NULL,
+    `last_seen_state`  INT      NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 

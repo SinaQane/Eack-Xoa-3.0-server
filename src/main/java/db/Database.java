@@ -41,17 +41,67 @@ public class Database
         statement.close();
     }
 
-    public boolean userExists(long id) throws SQLException
+    public boolean rowExists(String table, long id) throws SQLException
     {
-        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `users` WHERE `id` = ?");
+        String query = "";
+        switch (table)
+        {
+            case "users":
+                query = "SELECT 1 FROM `users` WHERE `id` = ?";
+                break;
+            case "profiles":
+                query = "SELECT 1 FROM `profiles` WHERE `id` = ?";
+                break;
+            case "tweets":
+                query = "SELECT 1 FROM `tweets` WHERE `id` = ?";
+                break;
+            case "groups":
+                query = "SELECT 1 FROM `groups` WHERE `id` = ?";
+                break;
+            case "chats":
+                query = "SELECT 1 FROM `chats` WHERE `id` = ?";
+                break;
+            case "messages":
+                query = "SELECT 1 FROM `messages` WHERE `id` = ?";
+                break;
+            case "notifications":
+                query = "SELECT 1 FROM `notifications` WHERE `id` = ?";
+                break;
+        }
+        PreparedStatement statement = connection.prepareStatement(query);
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
         return res.next();
     }
 
-    public Long maxUserId() throws SQLException
+    public Long maxTableId(String table) throws SQLException
     {
-        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `users`");
+        String query = "";
+        switch (table)
+        {
+            case "users":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `users`";
+                break;
+            case "profiles":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `profiles`";
+                break;
+            case "tweets":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `tweets`";
+                break;
+            case "groups":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `groups`";
+                break;
+            case "chats":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `chats`";
+                break;
+            case "messages":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `messages`";
+                break;
+            case "notifications":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `notifications`";
+                break;
+        }
+        PreparedStatement statement = connection.prepareStatement(query);
         ResultSet res = statement.executeQuery();
         long maxId = -1L;
         if (res.next()) {
@@ -87,7 +137,7 @@ public class Database
     public User saveUser(User user) throws SQLException
     {
         PreparedStatement statement;
-        boolean exists = userExists(user.getId());
+        boolean exists = rowExists("users", user.getId());
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -114,28 +164,9 @@ public class Database
         statement.executeQuery();
         if (!exists)
         {
-            user.setId(maxUserId());
+            user.setId(maxTableId("users"));
         }
         return loadUser(user.getId());
-    }
-
-    public boolean profileExists(long id) throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `profiles` WHERE `id` = ?");
-        statement.setLong(1, id);
-        ResultSet res = statement.executeQuery();
-        return res.next();
-    }
-
-    public Long maxProfileId() throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `profiles`");
-        ResultSet res = statement.executeQuery();
-        long maxId = -1L;
-        if (res.next()) {
-            maxId = res.getLong("max_id");
-        }
-        return maxId;
     }
 
     public Profile loadProfile(long id) throws SQLException
@@ -175,7 +206,7 @@ public class Database
 
     public Profile saveProfile(Profile profile) throws SQLException {
         PreparedStatement statement;
-        boolean exists = profileExists(profile.getId());
+        boolean exists = rowExists("profiles", profile.getId());
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -210,35 +241,12 @@ public class Database
         {
             statement.setLong(21, profile.getId());
         }
-        else
-        {
-            profile.setId(maxProfileId());
-        }
         statement.executeQuery();
         if (!exists)
         {
-            profile.setId(maxProfileId());
+            profile.setId(maxTableId("profiles"));
         }
         return loadProfile(profile.getId());
-    }
-
-    public boolean tweetExists(long id) throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `tweets` WHERE `id` = ?");
-        statement.setLong(1, id);
-        ResultSet res = statement.executeQuery();
-        return res.next();
-    }
-
-    public Long maxTweetId() throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `tweets`");
-        ResultSet res = statement.executeQuery();
-        long maxId = -1L;
-        if (res.next()) {
-            maxId = res.getLong("max_id");
-        }
-        return maxId;
     }
 
     public Tweet loadTweet(long id) throws SQLException
@@ -270,7 +278,7 @@ public class Database
     public Tweet saveTweet(Tweet tweet) throws SQLException
     {
         PreparedStatement statement;
-        boolean exists = tweetExists(tweet.getId());
+        boolean exists = rowExists("tweets", tweet.getId());
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -299,28 +307,9 @@ public class Database
         statement.executeQuery();
         if (!exists)
         {
-            tweet.setId(maxTweetId());
+            tweet.setId(maxTableId("tweets"));
         }
         return loadTweet(tweet.getId());
-    }
-
-    public boolean groupExists(long id) throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `groups` WHERE `id` = ?");
-        statement.setLong(1, id);
-        ResultSet res = statement.executeQuery();
-        return res.next();
-    }
-
-    public Long maxGroupId() throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `groups`");
-        ResultSet res = statement.executeQuery();
-        long maxId = -1L;
-        if (res.next()) {
-            maxId = res.getLong("max_id");
-        }
-        return maxId;
     }
 
     public Group loadGroup(long id) throws SQLException
@@ -343,7 +332,7 @@ public class Database
     public Group saveGroup(Group group) throws SQLException
     {
         PreparedStatement statement;
-        boolean exists = groupExists(group.getId());
+        boolean exists = rowExists("groups", group.getId());
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -363,14 +352,58 @@ public class Database
         statement.executeQuery();
         if (!exists)
         {
-            group.setId(maxGroupId());
+            group.setId(maxTableId("groups"));
         }
         return loadGroup(group.getId());
     }
 
-    public Chat loadChat(long id)
+    public Chat loadChat(long id) throws SQLException
     {
-        return null;
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `chats` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        Chat chat = new Chat();
+        while (res.next())
+        {
+            chat.setId(id);
+            chat.setChatName(res.getString("chat_name"));
+            chat.setGroup(res.getBoolean("group"));
+            chat.setUsers(Arrays.asList(gson.fromJson(res.getString("users"), Long[].class)));
+            chat.setMessages(Arrays.asList(gson.fromJson(res.getString("messages"), Long[].class)));
+        }
+        res.close();
+        statement.close();
+        return chat;
+    }
+
+    public Chat saveChat(Chat chat) throws SQLException
+    {
+        PreparedStatement statement;
+        boolean exists = rowExists("chats", chat.getId());
+        if (exists)
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `chats` SET `chat_name` = ?, `group` = ?, `users` = ?, `messages` = ? WHERE `id` = ?");
+        }
+        else
+        {
+            statement = connection.prepareStatement(
+                    "INSERT INTO `chats` (`chat_name`, `group`, `users`, `messages`) VALUES (?, ?, ?, ?)");
+        }
+        statement.setString(1, chat.getChatName());
+        statement.setBoolean(2, chat.isGroup());
+        statement.setString(3, new Gson().toJson(chat.getUsers()));
+        statement.setString(4, new Gson().toJson(chat.getMessages()));
+        if (exists)
+        {
+            statement.setLong(5, chat.getId());
+        }
+        statement.executeQuery();
+        if (!exists)
+        {
+            chat.setId(maxTableId("chats"));
+        }
+        return loadChat(chat.getId());
     }
 
     public Message loadMessage(long id)

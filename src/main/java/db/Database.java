@@ -463,8 +463,50 @@ public class Database
         return loadMessage(message.getId());
     }
 
-    public Notification loadNotification(long id)
+    public Notification loadNotification(long id) throws SQLException
     {
-        return null;
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `notifications` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        Notification notification = new Notification();
+        while (res.next())
+        {
+            notification.setId(id);
+            notification.setOwner(res.getLong("owner"));
+            notification.setRequestFrom(res.getLong("request_from"));
+            notification.setText(res.getString("text"));
+        }
+        res.close();
+        statement.close();
+        return notification;
+    }
+
+    public Notification saveNotification(Notification notification) throws SQLException
+    {
+        PreparedStatement statement;
+        boolean exists = rowExists("notifications", notification.getId());
+        if (exists)
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `notifications` SET `owner` = ?, `request_from` = ?, `text` = ? WHERE `id` = ?");
+        }
+        else
+        {
+            statement = connection.prepareStatement(
+                    "INSERT INTO `notifications` (`owner`, `request_from`, `text`) VALUES (?, ?, ?)");
+        }
+        statement.setLong(1, notification.getOwner());
+        statement.setLong(2, notification.getRequestFrom());
+        statement.setString(3, notification.getText());
+        if (exists)
+        {
+            statement.setLong(4, notification.getId());
+        }
+        statement.executeQuery();
+        if (!exists)
+        {
+            notification.setId(maxTableId("notifications"));
+        }
+        return loadNotification(notification.getId());
     }
 }

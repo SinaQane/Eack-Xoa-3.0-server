@@ -406,9 +406,61 @@ public class Database
         return loadChat(chat.getId());
     }
 
-    public Message loadMessage(long id)
+    public Message loadMessage(long id) throws SQLException
     {
-        return null;
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `messages` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        Message message = new Message();
+        while (res.next())
+        {
+            message.setId(id);
+            message.setChatId(res.getLong("chat_id"));
+            message.setOwnerId(res.getLong("owner_id"));
+            message.setTweetId(res.getLong("tweet_id"));
+            message.setIndex(res.getInt("index"));
+            message.setText(res.getString("text"));
+            message.setText(res.getString("picture"));
+            message.setMessageDate(res.getLong("message_date_unix"));
+            message.setSeenList(Arrays.asList(gson.fromJson(res.getString("seen_list"), Long[].class)));
+        }
+        res.close();
+        statement.close();
+        return message;
+    }
+
+    public Message saveMessage(Message message) throws SQLException
+    {
+        PreparedStatement statement;
+        boolean exists = rowExists("messages", message.getId());
+        if (exists)
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `messages` SET `chat_id` = ?, `owner_id` = ?, `tweet_id` = ?, `index` = ?, `text` = ?, `picture` = ?, `message_date_unix` = ?, `seen_list` = ? WHERE `id` = ?");
+        }
+        else
+        {
+            statement = connection.prepareStatement(
+                    "INSERT INTO `messages` (`chat_id`, `owner_id`, `tweet_id`, `index`, `text`, `picture`, `message_date_unix`, `seen_list`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        }
+        statement.setLong(1, message.getChatId());
+        statement.setLong(2, message.getOwnerId());
+        statement.setLong(3, message.getTweetId());
+        statement.setInt(4, message.getIndex());
+        statement.setString(5, message.getText());
+        statement.setString(6, message.getPicture());
+        statement.setLong(7, message.getMessageDate());
+        statement.setString(8, new Gson().toJson(message.getSeenList()));
+        if (exists)
+        {
+            statement.setLong(9, message.getId());
+        }
+        statement.executeQuery();
+        if (!exists)
+        {
+            message.setId(maxTableId("messages"));
+        }
+        return loadMessage(message.getId());
     }
 
     public Notification loadNotification(long id)

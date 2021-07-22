@@ -65,11 +65,12 @@ public class Database
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `users` WHERE `id` = ?");
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
-        User user = null;
+        User user = new User();
         while (res.next())
         {
-            user = new User(res.getString("username"), res.getString("password"));
             user.setId(id);
+            user.setUsername(res.getString("username"));
+            user.setPassword(res.getString("password"));
             user.setBio(res.getString("bio"));
             user.setName(res.getString("name"));
             user.setEmail(res.getString("email"));
@@ -169,7 +170,7 @@ public class Database
         }
         res.close();
         statement.close();
-        return null;
+        return profile;
     }
 
     public Profile saveProfile(Profile profile) throws SQLException {
@@ -221,9 +222,86 @@ public class Database
         return loadProfile(profile.getId());
     }
 
-    public Tweet loadTweet(long id)
+    public boolean tweetExists(long id) throws SQLException
     {
-        return null;
+        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `tweets` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        return res.next();
+    }
+
+    public Long maxTweetId() throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `tweets`");
+        ResultSet res = statement.executeQuery();
+        long maxId = -1L;
+        if (res.next()) {
+            maxId = res.getLong("max_id");
+        }
+        return maxId;
+    }
+
+    public Tweet loadTweet(long id) throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `tweets` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        Tweet tweet = new Tweet();
+        while (res.next())
+        {
+            tweet.setId(id);
+            tweet.setOwner(res.getLong("owner"));
+            tweet.setUpperTweet(res.getLong("upper_tweet"));
+            tweet.setPicture(res.getString("picture"));
+            tweet.setVisible(res.getBoolean("visible"));
+            tweet.setText(res.getString("text"));
+            tweet.setTweetDate(res.getDate("tweet_date"));
+            tweet.setComments(Arrays.asList(gson.fromJson(res.getString("comments"), Long[].class)));
+            tweet.setUpvotes(Arrays.asList(gson.fromJson(res.getString("upvotes"), Long[].class)));
+            tweet.setDownvotes(Arrays.asList(gson.fromJson(res.getString("downvotes"), Long[].class)));
+            tweet.setRetweets(Arrays.asList(gson.fromJson(res.getString("retweets"), Long[].class)));
+            tweet.setReports(res.getInt("reports"));
+        }
+        res.close();
+        statement.close();
+        return tweet;
+    }
+
+    public Tweet saveTweet(Tweet tweet) throws SQLException
+    {
+        PreparedStatement statement;
+        boolean exists = tweetExists(tweet.getId());
+        if (exists)
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `tweets` SET `owner` = ?, `upper_tweet` = ?, `picture` = ?, `visible` = ?, `text` = ?, `tweet_date` = ?, `comments` = ?, `upvotes` = ?, `downvotes` = ?, `retweets` = ?, `reports` = ? WHERE `id` = ?");
+        }
+        else
+        {
+            statement = connection.prepareStatement(
+                    "INSERT INTO `tweets` (`owner`, `upper_tweet`, `picture`, `visible`, `text`, `tweet_date`, `comments`, `upvotes`, `downvotes`, `retweets`, `reports`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        }
+        statement.setLong(1, tweet.getOwner());
+        statement.setLong(2, tweet.getUpperTweet());
+        statement.setString(3, tweet.getPicture());
+        statement.setBoolean(4, tweet.isVisible());
+        statement.setString(5, tweet.getText());
+        statement.setDate(6, (Date) tweet.getTweetDate());
+        statement.setString(7, new Gson().toJson(tweet.getComments()));
+        statement.setString(8, new Gson().toJson(tweet.getUpvotes()));
+        statement.setString(9, new Gson().toJson(tweet.getDownvotes()));
+        statement.setString(10, new Gson().toJson(tweet.getRetweets()));
+        statement.setInt(11, tweet.getReports());
+        if (exists)
+        {
+            statement.setLong(12, tweet.getId());
+        }
+        statement.executeQuery();
+        if (!exists)
+        {
+            tweet.setId(maxTweetId());
+        }
+        return loadTweet(tweet.getId());
     }
 
     public Group loadGroup(long id)

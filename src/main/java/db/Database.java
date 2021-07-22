@@ -304,9 +304,68 @@ public class Database
         return loadTweet(tweet.getId());
     }
 
-    public Group loadGroup(long id)
+    public boolean groupExists(long id) throws SQLException
     {
-        return null;
+        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM `groups` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        return res.next();
+    }
+
+    public Long maxGroupId() throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) AS `max_id` FROM `groups`");
+        ResultSet res = statement.executeQuery();
+        long maxId = -1L;
+        if (res.next()) {
+            maxId = res.getLong("max_id");
+        }
+        return maxId;
+    }
+
+    public Group loadGroup(long id) throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `groups` WHERE `id` = ?");
+        statement.setLong(1, id);
+        ResultSet res = statement.executeQuery();
+        Group group = new Group();
+        while (res.next())
+        {
+            group.setId(id);
+            group.setTitle(res.getString("title"));
+            group.setMembers(Arrays.asList(gson.fromJson(res.getString("members"), Long[].class)));
+        }
+        res.close();
+        statement.close();
+        return group;
+    }
+
+    public Group saveGroup(Group group) throws SQLException
+    {
+        PreparedStatement statement;
+        boolean exists = groupExists(group.getId());
+        if (exists)
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `groups` SET `title` = ?, `members` = ? WHERE `id` = ?");
+        }
+        else
+        {
+            statement = connection.prepareStatement(
+                    "INSERT INTO `groups` (`title`, `members`) VALUES (?, ?)");
+        }
+        statement.setString(1, group.getTitle());
+        statement.setString(2, new Gson().toJson(group.getMembers()));
+        if (exists)
+        {
+            statement.setLong(3, group.getId());
+        }
+        statement.executeQuery();
+        if (!exists)
+        {
+            group.setId(maxGroupId());
+        }
+        return loadGroup(group.getId());
     }
 
     public Chat loadChat(long id)

@@ -418,6 +418,9 @@ public class Database
             message.setText(res.getString("picture"));
             message.setMessageDate(res.getLong("message_date_unix"));
             message.setSeenList(Arrays.asList(gson.fromJson(res.getString("seen_list"), Long[].class)));
+            message.setSent(res.getBoolean("sent"));
+            message.setReceived(res.getBoolean("received"));
+            message.setSeen(res.getBoolean("seen"));
         }
         res.close();
         statement.close();
@@ -431,12 +434,12 @@ public class Database
         if (exists)
         {
             statement = connection.prepareStatement(
-                    "UPDATE `messages` SET `chat_id` = ?, `owner_id` = ?, `tweet_id` = ?, `index` = ?, `text` = ?, `picture` = ?, `message_date_unix` = ?, `seen_list` = ? WHERE `id` = ?");
+                    "UPDATE `messages` SET `chat_id` = ?, `owner_id` = ?, `tweet_id` = ?, `index` = ?, `text` = ?, `picture` = ?, `message_date_unix` = ?, `seen_list` = ?, `sent` = ?, `received` = ?, `seen` = ? WHERE `id` = ?");
         }
         else
         {
             statement = connection.prepareStatement(
-                    "INSERT INTO `messages` (`chat_id`, `owner_id`, `tweet_id`, `index`, `text`, `picture`, `message_date_unix`, `seen_list`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    "INSERT INTO `messages` (`chat_id`, `owner_id`, `tweet_id`, `index`, `text`, `picture`, `message_date_unix`, `seen_list`, `sent`, `received`, `seen`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         }
         statement.setLong(1, message.getChatId());
         statement.setLong(2, message.getOwnerId());
@@ -446,9 +449,12 @@ public class Database
         statement.setString(6, message.getPicture());
         statement.setLong(7, message.getMessageDate());
         statement.setString(8, new Gson().toJson(message.getSeenList()));
+        statement.setBoolean(9, message.isSent());
+        statement.setBoolean(10, message.isReceived());
+        statement.setBoolean(11, message.isSeen());
         if (exists)
         {
-            statement.setLong(9, message.getId());
+            statement.setLong(12, message.getId());
         }
         statement.executeQuery();
         if (!exists)

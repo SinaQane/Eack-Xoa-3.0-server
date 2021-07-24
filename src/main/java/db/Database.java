@@ -2,8 +2,6 @@ package db;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import config.Config;
-import constants.Constants;
 import model.*;
 
 import java.sql.*;
@@ -29,11 +27,9 @@ public class Database
         return db;
     }
 
-    public static void connectToDatabase() throws SQLException
+    public void connectToDatabase(String url, String username, String password) throws SQLException
     {
-        String url = new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "db_url");
-        String username = new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "db_username");
-        String password = new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "db_password");
+
         connection = DriverManager.getConnection(url, username, password);
         Statement statement = connection.createStatement();
         statement.setQueryTimeout(30);

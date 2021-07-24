@@ -1,8 +1,8 @@
-DROP DATABASE `eack_xoa`;
+DROP DATABASE `eack_xoa_server`;
 
-CREATE DATABASE `eack_xoa`;
+CREATE DATABASE `eack_xoa_server`;
 
-CREATE TABLE `eack_xoa`.`users`
+CREATE TABLE `eack_xoa_server`.`users`
 (
     `id`           BIGINT       NOT NULL AUTO_INCREMENT,
     `username`     VARCHAR(64)  NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE `eack_xoa`.`users`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`profiles`
+CREATE TABLE `eack_xoa_server`.`profiles`
 (
     `id`               BIGINT   NOT NULL AUTO_INCREMENT,
     `picture`          LONGTEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `eack_xoa`.`profiles`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`tweets`
+CREATE TABLE `eack_xoa_server`.`tweets`
 (
     `id`          BIGINT       NOT NULL AUTO_INCREMENT,
     `owner`       BIGINT       NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `eack_xoa`.`tweets`
     FOREIGN KEY (`upper_tweet`) REFERENCES tweets (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`groups`
+CREATE TABLE `eack_xoa_server`.`groups`
 (
     `id`      BIGINT      NOT NULL AUTO_INCREMENT,
     `title`   VARCHAR(64) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE `eack_xoa`.`groups`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`chats`
+CREATE TABLE `eack_xoa_server`.`chats`
 (
     `id`        BIGINT      NOT NULL AUTO_INCREMENT,
     `chat_name` VARCHAR(64) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE `eack_xoa`.`chats`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`messages`
+CREATE TABLE `eack_xoa_server`.`messages`
 (
     `id`                BIGINT       NOT NULL AUTO_INCREMENT,
     `chat_id`           BIGINT       NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE `eack_xoa`.`messages`
     FOREIGN KEY (`tweet_id`) REFERENCES tweets (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `eack_xoa`.`notifications`
+CREATE TABLE `eack_xoa_server`.`notifications`
 (
     `id`           BIGINT       NOT NULL AUTO_INCREMENT,
     `owner`        BIGINT       NOT NULL,

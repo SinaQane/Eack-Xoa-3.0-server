@@ -14,6 +14,8 @@ public class Database
     private final GsonBuilder gsonBuilder = new GsonBuilder();
     private final Gson gson = gsonBuilder.setPrettyPrinting().create();
 
+    // Singleton class stuff
+
     static Database db;
 
     private Database() {}
@@ -27,6 +29,7 @@ public class Database
         return db;
     }
 
+    // Establish connection to the database
     public void connectToDatabase(String url, String username, String password) throws SQLException
     {
 
@@ -36,6 +39,7 @@ public class Database
         statement.close();
     }
 
+    // Find out if there exists a row with given id in a table
     public boolean rowExists(String table, long id) throws SQLException
     {
         String query = "";
@@ -69,6 +73,7 @@ public class Database
         return res.next();
     }
 
+    // Get the max amount of the auto-generated id in a table
     public Long maxTableId(String table) throws SQLException
     {
         String query = "";
@@ -103,6 +108,28 @@ public class Database
             maxId = res.getLong("max_id");
         }
         return maxId;
+    }
+
+    // Check if a username/email/phone number exists in the table for Validations class
+    public boolean itemAvailable(String column, String item) throws SQLException
+    {
+        String query = "";
+        switch (column)
+        {
+            case "email":
+                query = "SELECT 1 FROM `users` WHERE `email` = ?";
+                break;
+            case "username":
+                query = "SELECT 1 FROM `users` WHERE `username` = ?";
+                break;
+            case "phone_number":
+                query = "SELECT 1 FROM `users` WHERE `phone_number` = ?";
+                break;
+        }
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, item);
+        ResultSet res = statement.executeQuery();
+        return res.next();
     }
 
     public User loadUser(long id) throws SQLException

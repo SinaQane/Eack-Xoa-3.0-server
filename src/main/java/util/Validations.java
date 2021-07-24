@@ -17,11 +17,11 @@ public class Validations
     private static Pattern PHONE_REGEX;
 
     /* Username regex with these rules:
-        Only contains alphanumeric characters, underscore and dot.
-        Underscore and dot can't be at the end or start of a username.
-        Underscore and dot can't be next to each other.
-        Underscore or dot can't be used multiple times in a row.
-        Number of characters must be between 8 to 20. */
+           Only contains alphanumeric characters, underscore and dot.
+           Underscore and dot can't be at the end or start of a username.
+           Underscore and dot can't be next to each other.
+           Underscore or dot can't be used multiple times in a row.
+           Number of characters must be between 8 to 20. */
     private static Pattern USERNAME_REGEX;
 
     static Validations validations;

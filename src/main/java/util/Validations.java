@@ -28,10 +28,9 @@ public class Validations
 
     private Validations()
     {
-        Config config = new Config(Constants.CONFIG_ADDRESS);
-        EMAIL_REGEX = Pattern.compile(new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "email.regexp"));
-        PHONE_REGEX = Pattern.compile(new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "phone.regexp"));
-        USERNAME_REGEX = Pattern.compile(new Config(Constants.CONFIG_ADDRESS).getProperty(String.class, "username.regexp"));
+        EMAIL_REGEX = Pattern.compile(new Config(Constants.CONFIG).getProperty(String.class, "email.regexp"));
+        PHONE_REGEX = Pattern.compile(new Config(Constants.CONFIG).getProperty(String.class, "phone.regexp"));
+        USERNAME_REGEX = Pattern.compile(new Config(Constants.CONFIG).getProperty(String.class, "username.regexp"));
     }
 
     public static Validations getValidations()

@@ -1,4 +1,4 @@
-package util;
+package controller;
 
 import db.Database;
 import model.Chat;
@@ -7,7 +7,7 @@ import model.User;
 
 import java.sql.SQLException;
 
-public class ChatUtil
+public class ChatController
 {
     public long getLastMessageTime(Chat chat)
     {

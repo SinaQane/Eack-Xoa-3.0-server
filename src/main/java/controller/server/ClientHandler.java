@@ -2,10 +2,7 @@ package controller.server;
 
 import config.Config;
 import constants.Constants;
-import controller.ListsController;
-import controller.RequestController;
-import controller.TweetController;
-import controller.UserController;
+import controller.*;
 import db.Database;
 import event.EventVisitor;
 import event.events.authentication.LoginForm;
@@ -28,6 +25,9 @@ import response.responses.authentication.OfflineLoginResponse;
 import response.responses.authentication.SignUpResponse;
 import response.responses.database.*;
 import response.responses.general.*;
+import response.responses.settings.DeactivationResponse;
+import response.responses.settings.DeleteAccountResponse;
+import response.responses.settings.SettingsResponse;
 import util.ImageUtil;
 import util.Token;
 import util.Validations;
@@ -183,6 +183,11 @@ public class ClientHandler extends Thread implements EventVisitor
             User user = Database.getDB().loadUser(username);
             if (user.getPassword().equals(password))
             {
+                if (user.isDeactivated())
+                {
+                    user.setActive(true);
+                    user = Database.getDB().saveUser(user);
+                }
                 loggedInUser = user;
                 authToken = tokenGenerator.newToken();
                 Database.getDB().updateLastSeen(loggedInUser.getId());
@@ -201,7 +206,13 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         try
         {
-            loggedInUser = Database.getDB().loadUser(id);
+            User user = Database.getDB().loadUser(id);
+            if (user.isDeactivated())
+            {
+                user.setActive(true);
+                user = Database.getDB().saveUser(user);
+            }
+            loggedInUser = user;
             authToken = tokenGenerator.newToken();
             Database.getDB().updateLastSeen(id);
             return new OfflineLoginResponse(loggedInUser, authToken);
@@ -462,31 +473,75 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
-    public Response settings(SettingsForm settingsForm, Long aLong, String s, boolean b)
+    public Response settings(SettingsForm form, Long userId, String token, boolean online)
+    {
+        if (online)
+        {
+            if (!authToken.equals(token))
+            {
+                return new SettingsResponse(true, null, new Unauthenticated());
+            }
+        }
+
+        SettingsController controller = new SettingsController();
+        controller.editUser(form, userId);
+
+        try
+        {
+            loggedInUser = Database.getDB().loadUser(loggedInUser.getId());
+        } catch (SQLException ignored) {}
+
+        return new SettingsResponse(online, null, null);
+    }
+
+    @Override
+    public Response deleteAccount(long userId, String token, boolean online)
+    {
+        if (online)
+        {
+            if (!authToken.equals(token))
+            {
+                return new DeleteAccountResponse(true, new Unauthenticated());
+            }
+        }
+
+        SettingsController controller = new SettingsController();
+        controller.deleteAccount(userId);
+
+        loggedInUser = null;
+        authToken = "";
+
+        return new DeleteAccountResponse(online, null);
+    }
+
+    @Override
+    public Response deactivate(long userId, String token, boolean online)
+    {
+        if (online)
+        {
+            if (!authToken.equals(token))
+            {
+                return new DeactivationResponse(true, new Unauthenticated());
+            }
+        }
+
+        SettingsController controller = new SettingsController();
+        controller.deactivate(userId);
+
+        loggedInUser = null;
+        authToken = "";
+
+        return new DeactivationResponse(online, null);
+    }
+
+    @Override
+    public Response viewProfile(long userId)
     {
         return null;
     }
 
     @Override
-    public Response deleteAccount(long l, String s, boolean b)
-    {
-        return null;
-    }
-
-    @Override
-    public Response deactivate(long l, String s, boolean b)
-    {
-        return null;
-    }
-
-    @Override
-    public Response viewProfile(long l)
-    {
-        return null;
-    }
-
-    @Override
-    public Response refreshProfile(long l)
+    public Response refreshProfile(long userId)
     {
         return null;
     }

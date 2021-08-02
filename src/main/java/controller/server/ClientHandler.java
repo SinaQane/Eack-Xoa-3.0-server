@@ -30,7 +30,9 @@ import response.responses.general.*;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
 import response.responses.settings.SettingsResponse;
+import response.responses.timeline.RefreshBookmarksResponse;
 import response.responses.timeline.RefreshTimelineResponse;
+import response.responses.timeline.ViewBookmarksResponse;
 import response.responses.timeline.ViewTimelineResponse;
 import util.ImageUtil;
 import util.Token;
@@ -570,12 +572,6 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
-    public Response userInteraction(String s, long l, long l1, String s1)
-    {
-        return null; // TODO
-    }
-
-    @Override
     public Response explore(long userId)
     {
         ExploreController controller = new ExploreController();
@@ -606,11 +602,19 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response viewBookmarks(long userId)
     {
-        return null;
+        TimelineController controller = new TimelineController();
+        return new ViewBookmarksResponse(controller.getBookmarks(userId));
     }
 
     @Override
     public Response refreshBookmarks(long userId)
+    {
+        TimelineController controller = new TimelineController();
+        return new RefreshBookmarksResponse(controller.getBookmarks(userId));
+    }
+
+    @Override
+    public Response userInteraction(String s, long l, long l1, String s1)
     {
         return null;
     }

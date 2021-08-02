@@ -44,18 +44,40 @@ public class TimelineController
                 Tweet tempTweet = Database.getDB().loadTweet(tweetInfo[0]);
                 unsortedTimeline.put(tweetInfo, tempTweet.getTweetDate().getTime());
             }
-
         } catch (SQLException ignored) {}
 
         List<Long[]> timeline = new LinkedList<>();
-        List<List<Long[]>> result = new LinkedList<>();
 
         for (Map.Entry<Long[], Long> e : Utilities.sortByValue(unsortedTimeline).entrySet())
         {
             timeline.add(0, e.getKey());
         }
 
-        for (int i = 0; i < timeline.size(); i = i+3)
+        return createList(timeline);
+    }
+
+    public List<List<Long[]>> getBookmarks(long userId)
+    {
+        List<Long[]> bookmarks = new LinkedList<>();
+
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(userId);
+
+            for (Long id : profile.getSavedTweets())
+            {
+                bookmarks.add(new Long[]{id, -1L});
+            }
+        } catch (SQLException ignored) {}
+
+        return createList(bookmarks);
+    }
+
+    public List<List<Long[]>> createList(List<Long[]> items)
+    {
+        List<List<Long[]>> result = new LinkedList<>();
+
+        for (int i = 0; i < items.size(); i = i+3)
         {
             List<Long[]> temp = new LinkedList<>();
 
@@ -63,23 +85,23 @@ public class TimelineController
             Long[] secondTweet = new Long[2];
             Long[] thirdTweet = new Long[2];
 
-            firstTweet[0] = timeline.get(i)[0];
-            firstTweet[1] = timeline.get(i)[1];
+            firstTweet[0] = items.get(i)[0];
+            firstTweet[1] = items.get(i)[1];
 
-            if (i + 1 < timeline.size())
+            if (i + 1 < items.size())
             {
-                secondTweet[0] = timeline.get(i + 1)[0];
-                secondTweet[1] = timeline.get(i + 1)[1];
+                secondTweet[0] = items.get(i + 1)[0];
+                secondTweet[1] = items.get(i + 1)[1];
             }
             else
             {
                 secondTweet[0] = secondTweet[1] = -1L;
             }
 
-            if (i + 2 < timeline.size())
+            if (i + 2 < items.size())
             {
-                thirdTweet[0] = timeline.get(i + 2)[0];
-                thirdTweet[1] = timeline.get(i + 2)[1];
+                thirdTweet[0] = items.get(i + 2)[0];
+                thirdTweet[1] = items.get(i + 2)[1];
             }
             else
             {

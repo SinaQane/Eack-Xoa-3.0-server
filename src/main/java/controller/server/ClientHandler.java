@@ -30,11 +30,14 @@ import response.responses.general.*;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
 import response.responses.settings.SettingsResponse;
+import response.responses.timeline.RefreshTimelineResponse;
+import response.responses.timeline.ViewTimelineResponse;
 import util.ImageUtil;
 import util.Token;
 import util.Validations;
 
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.List;
 
 public class ClientHandler extends Thread implements EventVisitor
@@ -576,45 +579,51 @@ public class ClientHandler extends Thread implements EventVisitor
     public Response explore(long userId)
     {
         ExploreController controller = new ExploreController();
-        List<Long> randomTweets = controller.getRandomTweets(userId);
-        return new ExplorePageResponse(randomTweets);
+        return new ExplorePageResponse(controller.getRandomTweets(userId));
     }
 
     @Override
     public Response searchUser(long userId, String searched)
     {
         ExploreController controller = new ExploreController();
-        List<List<Long>> users = controller.search(searched);
-        return new SearchUserResponse(users);
+        return new SearchUserResponse(controller.search(searched));
     }
 
     @Override
-    public Response viewTimeline(long l) {
+    public Response viewTimeline(long userId)
+    {
+        TimelineController controller = new TimelineController();
+        return new ViewTimelineResponse(controller.getTimeline(userId));
+    }
+
+    @Override
+    public Response refreshTimeline(long userId)
+    {
+        TimelineController controller = new TimelineController();
+        return new RefreshTimelineResponse(controller.getTimeline(userId));
+    }
+
+    @Override
+    public Response viewBookmarks(long userId)
+    {
         return null;
     }
 
     @Override
-    public Response refreshTimeline(long l) {
+    public Response refreshBookmarks(long userId)
+    {
         return null;
     }
 
     @Override
-    public Response viewBookmarks(long l) {
+    public Response tweetInteraction(String s, long l, long l1, String s1)
+    {
         return null;
     }
 
     @Override
-    public Response refreshBookmarks(long l) {
-        return null;
-    }
-
-    @Override
-    public Response tweetInteraction(String s, long l, long l1, String s1) {
-        return null;
-    }
-
-    @Override
-    public Response forwardTweet(String s, String s1, long l, String s2) {
+    public Response forwardTweet(String s, String s1, long l, String s2)
+    {
         return null;
     }
 }

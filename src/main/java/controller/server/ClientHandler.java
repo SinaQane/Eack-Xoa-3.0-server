@@ -24,6 +24,8 @@ import response.responses.authentication.LogoutResponse;
 import response.responses.authentication.OfflineLoginResponse;
 import response.responses.authentication.SignUpResponse;
 import response.responses.database.*;
+import response.responses.explore.ExplorePageResponse;
+import response.responses.explore.SearchUserResponse;
 import response.responses.general.*;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
@@ -537,28 +539,53 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response viewProfile(long userId)
     {
-        return null;
+        UserController controller = new UserController();
+        List<List<Long[]>> tweets = controller.getTweets(loggedInUser.getId(), userId);
+
+        try
+        {
+            User user = Database.getDB().loadUser(userId);
+            return new ViewUserResponse(user, tweets);
+        } catch (SQLException ignored) {}
+
+        return new ViewUserResponse(null, null);
     }
 
     @Override
     public Response refreshProfile(long userId)
     {
-        return null;
+        UserController controller = new UserController();
+        List<List<Long[]>> tweets = controller.getTweets(loggedInUser.getId(), userId);
+
+        try
+        {
+            User user = Database.getDB().loadUser(userId);
+            return new ViewUserResponse(user, tweets);
+        } catch (SQLException ignored) {}
+
+        return new ViewUserResponse(null, null);
     }
 
     @Override
-    public Response userInteraction(String s, long l, long l1, String s1) {
-        return null;
+    public Response userInteraction(String s, long l, long l1, String s1)
+    {
+        return null; // TODO
     }
 
     @Override
-    public Response explore(long l) {
-        return null;
+    public Response explore(long userId)
+    {
+        ExploreController controller = new ExploreController();
+        List<Long> randomTweets = controller.getRandomTweets(userId);
+        return new ExplorePageResponse(randomTweets);
     }
 
     @Override
-    public Response searchUser(long l, String s) {
-        return null;
+    public Response searchUser(long userId, String searched)
+    {
+        ExploreController controller = new ExploreController();
+        List<List<Long>> users = controller.search(searched);
+        return new SearchUserResponse(users);
     }
 
     @Override

@@ -65,6 +65,11 @@ public class TweetController
         User ownerUser = Database.getDB().loadUser(tweet.getOwner());
         Profile ownerProfile = Database.getDB().loadProfile(tweet.getOwner());
 
+        if (ownerUser.getId().equals(viewer.getId()))
+        {
+            return true;
+        }
+
         if (ownerUser.isDeleted())
         {
             return false;

@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 public class GroupController
 {
-
     // Finds a Group by its name from a profile
     public Group getGroup(Profile profile, String groupName)
     {

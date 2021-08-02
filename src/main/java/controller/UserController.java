@@ -1,7 +1,6 @@
 package controller;
 
 import db.Database;
-import model.Group;
 import model.Profile;
 import model.Tweet;
 import model.User;

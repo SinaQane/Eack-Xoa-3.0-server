@@ -13,27 +13,125 @@ public class TweetController
 {
     public void upvote(long viewer, long tweetId)
     {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(viewer);
+            User user = Database.getDB().loadUser(viewer);
 
+            Tweet tweet = Database.getDB().loadTweet(tweetId);
+
+            if (profile.getUpvotedTweets().contains(tweetId))
+            {
+                profile.removeFromUpvotedTweets(tweet);
+                tweet.removeUpvote(user);
+            }
+            else
+            {
+                profile.removeFromDownvotedTweets(tweet);
+                profile.addToUpvotedTweets(tweet);
+                tweet.removeDownvote(user);
+                tweet.addUpvote(user);
+            }
+
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveTweet(tweet);
+        } catch (SQLException ignored) {}
     }
 
     public void downvote(long viewer, long tweetId)
     {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(viewer);
+            User user = Database.getDB().loadUser(viewer);
 
+            Tweet tweet = Database.getDB().loadTweet(tweetId);
+
+            if (profile.getDownvotedTweets().contains(tweetId))
+            {
+                profile.removeFromDownvotedTweets(tweet);
+                tweet.removeDownvote(user);
+            }
+            else
+            {
+                profile.removeFromUpvotedTweets(tweet);
+                profile.addToDownvotedTweets(tweet);
+                tweet.removeUpvote(user);
+                tweet.addDownvote(user);
+            }
+
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveTweet(tweet);
+        } catch (SQLException ignored) {}
     }
 
     public void retweet(long viewer, long tweetId)
     {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(viewer);
+            User user = Database.getDB().loadUser(viewer);
 
+            Tweet tweet = Database.getDB().loadTweet(tweetId);
+
+            if (profile.getRetweetedTweets().contains(tweetId))
+            {
+                profile.removeFromRetweetedTweets(tweet);
+                tweet.removeRetweet(user);
+            }
+            else
+            {
+                profile.addToRetweetedTweets(tweet);
+                tweet.addRetweet(user);
+            }
+
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveTweet(tweet);
+        } catch (SQLException ignored) {}
     }
 
     public void save(long viewer, long tweetId)
     {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(viewer);
+            Tweet tweet = Database.getDB().loadTweet(tweetId);
 
+            if (profile.getSavedTweets().contains(tweetId))
+            {
+                profile.removeFromSavedTweets(tweet);
+            }
+            else
+            {
+                profile.addToSavedTweets(tweet);
+            }
+
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveTweet(tweet);
+        } catch (SQLException ignored) {}
     }
 
     public void report(long viewer, long tweetId)
     {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(viewer);
+            Tweet tweet = Database.getDB().loadTweet(tweetId);
 
+            if (!profile.getReportedTweets().contains(tweetId))
+            {
+                profile.addToReportedTweets(tweet);
+                tweet.addReport();
+
+                if (tweet.getReports() > 9)
+                {
+                    tweet.deleteTweet();
+                }
+
+                Database.getDB().saveProfile(profile);
+                Database.getDB().saveTweet(tweet);
+            }
+        } catch (SQLException ignored) {}
     }
 
     public List<List<Long>> getComments(long viewerId, long tweetId)

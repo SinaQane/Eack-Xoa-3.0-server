@@ -1,5 +1,6 @@
 import config.Config;
 import constants.Constants;
+import controller.server.SocketController;
 import db.Database;
 
 import java.sql.SQLException;
@@ -19,5 +20,8 @@ public class Main
         {
             throwable.printStackTrace();
         }
+
+        SocketController socketController = new SocketController(new Config(Constants.CONFIG));
+        socketController.start();
     }
 }

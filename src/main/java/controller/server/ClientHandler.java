@@ -27,6 +27,7 @@ import response.responses.database.*;
 import response.responses.explore.ExplorePageResponse;
 import response.responses.explore.SearchUserResponse;
 import response.responses.general.*;
+import response.responses.profile.UserInteractionResponse;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
 import response.responses.settings.SettingsResponse;
@@ -34,12 +35,12 @@ import response.responses.timeline.RefreshBookmarksResponse;
 import response.responses.timeline.RefreshTimelineResponse;
 import response.responses.timeline.ViewBookmarksResponse;
 import response.responses.timeline.ViewTimelineResponse;
+import response.responses.tweet.TweetInteractionResponse;
 import util.ImageUtil;
 import util.Token;
 import util.Validations;
 
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.List;
 
 public class ClientHandler extends Thread implements EventVisitor
@@ -614,15 +615,61 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
-    public Response userInteraction(String s, long l, long l1, String s1)
+    public Response userInteraction(String interaction, long userId, long otherUserId, String token)
     {
-        return null;
+        if (!authToken.equals(token) || !loggedInUser.getId().equals(userId))
+        {
+            return new UserInteractionResponse(new Unauthenticated());
+        }
+
+        UserController controller = new UserController();
+
+        switch (interaction)
+        {
+            case "change":
+                controller.changeFollowStatus(userId, otherUserId);
+                break;
+            case "block":
+                controller.block(userId, otherUserId);
+                break;
+            case "mute":
+                controller.mute(userId, otherUserId);
+                break;
+        }
+
+        return new UserInteractionResponse(null);
     }
 
     @Override
-    public Response tweetInteraction(String s, long l, long l1, String s1)
+    public Response tweetInteraction(String interaction, long userId, long tweetId, String token)
     {
-        return null;
+        if (!authToken.equals(token) || !loggedInUser.getId().equals(userId))
+        {
+            return new TweetInteractionResponse(new Unauthenticated());
+        }
+
+        TweetController controller = new TweetController();
+
+        switch (interaction)
+        {
+            case "upvote":
+                controller.upvote(userId, tweetId);
+                break;
+            case "downvote":
+                controller.downvote(userId, tweetId);
+                break;
+            case "retweet":
+                controller.retweet(userId, tweetId);
+                break;
+            case "save":
+                controller.save(userId, tweetId);
+                break;
+            case "report":
+                controller.report(userId, tweetId);
+                break;
+        }
+
+        return new TweetInteractionResponse(null);
     }
 
     @Override

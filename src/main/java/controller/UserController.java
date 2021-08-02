@@ -14,6 +14,95 @@ import java.util.Map;
 
 public class UserController
 {
+    public void changeFollowStatus(long ourUser, long otherUser)
+    {
+        try
+        {
+            User ourUserAccount = Database.getDB().loadUser(ourUser);
+            User otherUserAccount = Database.getDB().loadUser(otherUser);
+
+            Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
+            Profile otherUserProfile = Database.getDB().loadProfile(otherUser);
+
+            if (ourUserProfile.getFollowings().contains(otherUser))
+            {
+                ourUserProfile.removeFromFollowings(otherUserAccount);
+                otherUserProfile.removeFromFollowers(ourUserAccount);
+            }
+            else
+            {
+                if (otherUserProfile.isPrivate())
+                {
+                    if (ourUserProfile.getPending().contains(otherUser))
+                    {
+                        ourUserProfile.removeFromPending(otherUserAccount);
+                        otherUserProfile.removeFromRequests(ourUserAccount);
+                    }
+                    else
+                    {
+                        ourUserProfile.addToPending(otherUserAccount);
+                        otherUserProfile.addToRequests(ourUserAccount);
+                    }
+                }
+                else
+                {
+                    ourUserProfile.addToFollowings(otherUserAccount);
+                    otherUserProfile.addToFollowers(ourUserAccount);
+                }
+            }
+
+            Database.getDB().saveProfile(ourUserProfile);
+            Database.getDB().saveProfile(otherUserProfile);
+        } catch (SQLException ignored) {}
+    }
+
+    public void mute(long ourUser, long otherUser)
+    {
+        try
+        {
+            User otherUserAccount = Database.getDB().loadUser(otherUser);
+            Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
+
+            if (ourUserProfile.getMuted().contains(otherUser))
+            {
+                ourUserProfile.removeFromMuted(otherUserAccount);
+            }
+            else
+            {
+                ourUserProfile.addToMuted(otherUserAccount);
+            }
+
+            Database.getDB().saveProfile(ourUserProfile);
+        } catch (SQLException ignored) {}
+    }
+
+    public void block(long ourUser, long otherUser)
+    {
+        try
+        {
+            User ourUserAccount = Database.getDB().loadUser(ourUser);
+            User otherUserAccount = Database.getDB().loadUser(otherUser);
+
+            Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
+            Profile otherUserProfile = Database.getDB().loadProfile(otherUser);
+
+            if (ourUserProfile.getBlocked().contains(otherUser))
+            {
+                ourUserProfile.removeFromBlocked(otherUserAccount);
+            }
+            else
+            {
+                ourUserProfile.removeFromFollowings(otherUserAccount);
+                ourUserProfile.removeFromFollowers(otherUserAccount);
+                otherUserProfile.removeFromFollowings(ourUserAccount);
+                ourUserProfile.addToBlocked(otherUserAccount);
+            }
+
+            Database.getDB().saveProfile(ourUserProfile);
+            Database.getDB().saveProfile(otherUserProfile);
+        } catch (SQLException ignored) {}
+    }
+
     public List<List<Long[]>> getTweets(long viewerId, long userId)
     {
         List<List<Long[]>> result = new LinkedList<>();

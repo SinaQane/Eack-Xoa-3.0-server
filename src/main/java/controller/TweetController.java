@@ -11,6 +11,31 @@ import java.util.List;
 
 public class TweetController
 {
+    public void upvote(long viewer, long tweetId)
+    {
+
+    }
+
+    public void downvote(long viewer, long tweetId)
+    {
+
+    }
+
+    public void retweet(long viewer, long tweetId)
+    {
+
+    }
+
+    public void save(long viewer, long tweetId)
+    {
+
+    }
+
+    public void report(long viewer, long tweetId)
+    {
+
+    }
+
     public List<List<Long>> getComments(long viewerId, long tweetId)
     {
         List<List<Long>> result = new LinkedList<>();

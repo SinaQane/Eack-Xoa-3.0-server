@@ -59,7 +59,6 @@ public class ListsController
         }
         catch (SQLException ignored) {return null;}
 
-        List<List<Long>> result = new LinkedList<>();
         List<Long> notifications = profile.getNotifications();
 
         try

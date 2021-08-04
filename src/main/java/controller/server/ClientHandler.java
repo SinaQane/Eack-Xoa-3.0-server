@@ -8,6 +8,7 @@ import event.EventVisitor;
 import event.events.authentication.LoginForm;
 import event.events.authentication.SignUpForm;
 import event.events.general.SendTweetForm;
+import event.events.groups.ManageGroupForm;
 import event.events.settings.SettingsForm;
 import exceptions.DatabaseError;
 import exceptions.Unauthenticated;
@@ -27,6 +28,9 @@ import response.responses.database.*;
 import response.responses.explore.ExplorePageResponse;
 import response.responses.explore.SearchUserResponse;
 import response.responses.general.*;
+import response.responses.groups.ManageGroupsResponse;
+import response.responses.groups.RefreshGroupsPageResponse;
+import response.responses.groups.ViewGroupsPageResponse;
 import response.responses.profile.UserInteractionResponse;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
@@ -333,10 +337,13 @@ public class ClientHandler extends Thread implements EventVisitor
 
         try
         {
-            tweet = Database.getDB().saveTweet(tweet);
-            Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
-            upperTweet.addComment(tweet);
-            Database.getDB().saveTweet(upperTweet);
+            if (upperTweetId != -1)
+            {
+                tweet = Database.getDB().saveTweet(tweet);
+                Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
+                upperTweet.addComment(tweet.getId());
+                Database.getDB().saveTweet(upperTweet);
+            }
         } catch (SQLException ignored) {}
 
         return new SendTweetResponse(null);
@@ -612,6 +619,34 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         TimelineController controller = new TimelineController();
         return new RefreshBookmarksResponse(controller.getBookmarks(userId));
+    }
+
+    @Override
+    public Response viewGroupsPage(Long userId)
+    {
+        GroupController controller = new GroupController();
+        return new ViewGroupsPageResponse(controller.getGroups(userId));
+    }
+
+    @Override
+    public Response refreshGroupsPage(Long userId)
+    {
+        GroupController controller = new GroupController();
+        return new RefreshGroupsPageResponse(controller.getGroups(userId));
+    }
+
+    @Override
+    public Response manageGroup(ManageGroupForm form, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new ManageGroupsResponse(new Unauthenticated());
+        }
+
+        GroupController controller = new GroupController();
+        controller.manageGroup(form, loggedInUser.getId());
+
+        return new ManageGroupsResponse(null);
     }
 
     @Override

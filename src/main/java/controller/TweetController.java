@@ -16,21 +16,19 @@ public class TweetController
         try
         {
             Profile profile = Database.getDB().loadProfile(viewer);
-            User user = Database.getDB().loadUser(viewer);
-
             Tweet tweet = Database.getDB().loadTweet(tweetId);
 
             if (profile.getUpvotedTweets().contains(tweetId))
             {
-                profile.removeFromUpvotedTweets(tweet);
-                tweet.removeUpvote(user);
+                profile.removeFromUpvotedTweets(tweetId);
+                tweet.removeUpvote(viewer);
             }
             else
             {
-                profile.removeFromDownvotedTweets(tweet);
-                profile.addToUpvotedTweets(tweet);
-                tweet.removeDownvote(user);
-                tweet.addUpvote(user);
+                profile.removeFromDownvotedTweets(tweetId);
+                profile.addToUpvotedTweets(tweetId);
+                tweet.removeDownvote(viewer);
+                tweet.addUpvote(viewer);
             }
 
             Database.getDB().saveProfile(profile);
@@ -43,21 +41,19 @@ public class TweetController
         try
         {
             Profile profile = Database.getDB().loadProfile(viewer);
-            User user = Database.getDB().loadUser(viewer);
-
             Tweet tweet = Database.getDB().loadTweet(tweetId);
 
             if (profile.getDownvotedTweets().contains(tweetId))
             {
-                profile.removeFromDownvotedTweets(tweet);
-                tweet.removeDownvote(user);
+                profile.removeFromDownvotedTweets(tweetId);
+                tweet.removeDownvote(viewer);
             }
             else
             {
-                profile.removeFromUpvotedTweets(tweet);
-                profile.addToDownvotedTweets(tweet);
-                tweet.removeUpvote(user);
-                tweet.addDownvote(user);
+                profile.removeFromUpvotedTweets(tweetId);
+                profile.addToDownvotedTweets(tweetId);
+                tweet.removeUpvote(viewer);
+                tweet.addDownvote(viewer);
             }
 
             Database.getDB().saveProfile(profile);
@@ -70,19 +66,17 @@ public class TweetController
         try
         {
             Profile profile = Database.getDB().loadProfile(viewer);
-            User user = Database.getDB().loadUser(viewer);
-
             Tweet tweet = Database.getDB().loadTweet(tweetId);
 
             if (profile.getRetweetedTweets().contains(tweetId))
             {
-                profile.removeFromRetweetedTweets(tweet);
-                tweet.removeRetweet(user);
+                profile.removeFromRetweetedTweets(tweetId);
+                tweet.removeRetweet(viewer);
             }
             else
             {
-                profile.addToRetweetedTweets(tweet);
-                tweet.addRetweet(user);
+                profile.addToRetweetedTweets(tweetId);
+                tweet.addRetweet(viewer);
             }
 
             Database.getDB().saveProfile(profile);
@@ -95,19 +89,17 @@ public class TweetController
         try
         {
             Profile profile = Database.getDB().loadProfile(viewer);
-            Tweet tweet = Database.getDB().loadTweet(tweetId);
 
             if (profile.getSavedTweets().contains(tweetId))
             {
-                profile.removeFromSavedTweets(tweet);
+                profile.removeFromSavedTweets(tweetId);
             }
             else
             {
-                profile.addToSavedTweets(tweet);
+                profile.addToSavedTweets(tweetId);
             }
 
             Database.getDB().saveProfile(profile);
-            Database.getDB().saveTweet(tweet);
         } catch (SQLException ignored) {}
     }
 
@@ -120,7 +112,7 @@ public class TweetController
 
             if (!profile.getReportedTweets().contains(tweetId))
             {
-                profile.addToReportedTweets(tweet);
+                profile.addToReportedTweets(tweetId);
                 tweet.addReport();
 
                 if (tweet.getReports() > 9)

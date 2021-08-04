@@ -18,16 +18,13 @@ public class UserController
     {
         try
         {
-            User ourUserAccount = Database.getDB().loadUser(ourUser);
-            User otherUserAccount = Database.getDB().loadUser(otherUser);
-
             Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
             Profile otherUserProfile = Database.getDB().loadProfile(otherUser);
 
             if (ourUserProfile.getFollowings().contains(otherUser))
             {
-                ourUserProfile.removeFromFollowings(otherUserAccount);
-                otherUserProfile.removeFromFollowers(ourUserAccount);
+                ourUserProfile.removeFromFollowings(otherUser);
+                otherUserProfile.removeFromFollowers(ourUser);
             }
             else
             {
@@ -35,19 +32,19 @@ public class UserController
                 {
                     if (ourUserProfile.getPending().contains(otherUser))
                     {
-                        ourUserProfile.removeFromPending(otherUserAccount);
-                        otherUserProfile.removeFromRequests(ourUserAccount);
+                        ourUserProfile.removeFromPending(otherUser);
+                        otherUserProfile.removeFromRequests(ourUser);
                     }
                     else
                     {
-                        ourUserProfile.addToPending(otherUserAccount);
-                        otherUserProfile.addToRequests(ourUserAccount);
+                        ourUserProfile.addToPending(otherUser);
+                        otherUserProfile.addToRequests(ourUser);
                     }
                 }
                 else
                 {
-                    ourUserProfile.addToFollowings(otherUserAccount);
-                    otherUserProfile.addToFollowers(ourUserAccount);
+                    ourUserProfile.addToFollowings(otherUser);
+                    otherUserProfile.addToFollowers(ourUser);
                 }
             }
 
@@ -65,11 +62,11 @@ public class UserController
 
             if (ourUserProfile.getMuted().contains(otherUser))
             {
-                ourUserProfile.removeFromMuted(otherUserAccount);
+                ourUserProfile.removeFromMuted(otherUser);
             }
             else
             {
-                ourUserProfile.addToMuted(otherUserAccount);
+                ourUserProfile.addToMuted(otherUser);
             }
 
             Database.getDB().saveProfile(ourUserProfile);
@@ -80,22 +77,19 @@ public class UserController
     {
         try
         {
-            User ourUserAccount = Database.getDB().loadUser(ourUser);
-            User otherUserAccount = Database.getDB().loadUser(otherUser);
-
             Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
             Profile otherUserProfile = Database.getDB().loadProfile(otherUser);
 
             if (ourUserProfile.getBlocked().contains(otherUser))
             {
-                ourUserProfile.removeFromBlocked(otherUserAccount);
+                ourUserProfile.removeFromBlocked(otherUser);
             }
             else
             {
-                ourUserProfile.removeFromFollowings(otherUserAccount);
-                ourUserProfile.removeFromFollowers(otherUserAccount);
-                otherUserProfile.removeFromFollowings(ourUserAccount);
-                ourUserProfile.addToBlocked(otherUserAccount);
+                ourUserProfile.removeFromFollowings(otherUser);
+                ourUserProfile.removeFromFollowers(otherUser);
+                otherUserProfile.removeFromFollowings(ourUser);
+                ourUserProfile.addToBlocked(otherUser);
             }
 
             Database.getDB().saveProfile(ourUserProfile);

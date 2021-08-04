@@ -15,15 +15,13 @@ public class RequestController
         {
             Notification notification = Database.getDB().loadNotification(notificationId);
 
-            User pendingUser = Database.getDB().loadUser(notification.getOwner());
-            User requestedUser = Database.getDB().loadUser(notification.getRequestFrom());
             Profile pendingProfile = Database.getDB().loadProfile(notification.getOwner());
             Profile requestedProfile = Database.getDB().loadProfile(notification.getRequestFrom());
 
-            pendingProfile.addToFollowers(requestedUser);
-            pendingProfile.removeFromRequests(requestedUser);
-            requestedProfile.removeFromPending(pendingUser);
-            requestedProfile.addToFollowers(pendingUser);
+            pendingProfile.addToFollowers(notification.getRequestFrom());
+            pendingProfile.removeFromRequests(notification.getRequestFrom());
+            requestedProfile.removeFromPending(notification.getOwner());
+            requestedProfile.addToFollowers(notification.getOwner());
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
@@ -36,13 +34,11 @@ public class RequestController
         {
             Notification notification = Database.getDB().loadNotification(notificationId);
 
-            User pendingUser = Database.getDB().loadUser(notification.getOwner());
-            User requestedUser = Database.getDB().loadUser(notification.getRequestFrom());
             Profile pendingProfile = Database.getDB().loadProfile(notification.getOwner());
             Profile requestedProfile = Database.getDB().loadProfile(notification.getRequestFrom());
 
-            pendingProfile.removeFromRequests(requestedUser);
-            requestedProfile.removeFromPending(pendingUser);
+            pendingProfile.removeFromRequests(notification.getRequestFrom());
+            requestedProfile.removeFromPending(notification.getOwner());
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
@@ -60,11 +56,11 @@ public class RequestController
             Profile pendingProfile = Database.getDB().loadProfile(notification.getOwner());
             Profile requestedProfile = Database.getDB().loadProfile(notification.getRequestFrom());
 
-            pendingProfile.removeFromRequests(requestedUser);
-            requestedProfile.removeFromPending(pendingUser);
+            pendingProfile.removeFromRequests(requestedUser.getId());
+            requestedProfile.removeFromPending(pendingUser.getId());
 
             Notification roast = new Notification(requestedUser.getId(), pendingUser.getUsername() + " rejected your follow request.");
-            requestedProfile.addToNotifications(roast);
+            requestedProfile.addToNotifications(roast.getId());
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);

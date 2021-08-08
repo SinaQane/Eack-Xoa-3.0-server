@@ -19,7 +19,8 @@ public class Utilities
     }
 
     // Returns the union of two ArrayLists
-    public static <T> ArrayList<T> arrayListsUnion(List<T> list1, List<T> list2) {
+    public static <T> ArrayList<T> arrayListsUnion(List<T> list1, List<T> list2)
+    {
         Set<T> set = new HashSet<>();
         set.addAll(list1);
         set.addAll(list2);

@@ -9,14 +9,13 @@ import event.events.authentication.LoginForm;
 import event.events.authentication.SignUpForm;
 import event.events.general.SendTweetForm;
 import event.events.groups.ManageGroupForm;
+import event.events.messages.MessageForm;
 import event.events.settings.SettingsForm;
 import exceptions.DatabaseError;
 import exceptions.Unauthenticated;
 import exceptions.authentication.LoginFailed;
 import exceptions.authentication.SignUpFailed;
-import model.Profile;
-import model.Tweet;
-import model.User;
+import model.*;
 import response.Response;
 import response.ResponseSender;
 import response.responses.Pong;
@@ -31,6 +30,7 @@ import response.responses.general.*;
 import response.responses.groups.ManageGroupsResponse;
 import response.responses.groups.RefreshGroupsPageResponse;
 import response.responses.groups.ViewGroupsPageResponse;
+import response.responses.messages.*;
 import response.responses.profile.UserInteractionResponse;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
@@ -650,6 +650,159 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
+    public Response receivedAllMessages(Long userId, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new ReceivedAllMessagesResponse(new Unauthenticated());
+        }
+
+        try
+        {
+            Database.getDB().receivedAllMessages(userId);
+        } catch (SQLException ignored) {}
+
+        return new ReceivedAllMessagesResponse(null);
+    }
+
+    @Override
+    public Response viewChatroom(Long chatId)
+    {
+        ChatController controller = new ChatController();
+        return new ViewChatroomResponse(controller.getChatroom(chatId), chatId);
+    }
+
+    @Override
+    public Response refreshChatroom(Long chatId)
+    {
+        ChatController controller = new ChatController();
+        return new RefreshChatroomResponse(controller.getChatroom(chatId), chatId);
+    }
+
+    @Override
+    public Response viewMessagesPage(Long userId)
+    {
+        ChatController controller = new ChatController();
+        return new ViewMessagesPageResponse(controller.getMessagesList(userId));
+    }
+
+    @Override
+    public Response refreshMessagesPage(Long userId)
+    {
+        ChatController controller = new ChatController();
+        return new RefreshMessagesPageResponse(controller.getMessagesList(userId));
+    }
+
+    @Override
+    public Response sendMessage(MessageForm form, String token)
+    {
+        return null; // TODO write method
+    }
+
+    @Override
+    public Response editMessage(MessageForm form, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new EditMessageResponse(new Unauthenticated());
+        }
+
+        try
+        {
+            Message message = Database.getDB().loadMessage(form.getId());
+            message.edit(form.getText());
+            Database.getDB().saveMessage(message);
+        } catch (SQLException ignored) {}
+
+        return new EditMessageResponse(null);
+    }
+
+    @Override
+    public Response deleteMessage(long messageId, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new DeleteMessageResponse(new Unauthenticated());
+        }
+
+        try
+        {
+            Message message = Database.getDB().loadMessage(messageId);
+            message.delete();
+            Database.getDB().saveMessage(message);
+        } catch (SQLException ignored) {}
+
+        return new DeleteMessageResponse(null);
+    }
+
+    @Override
+    public Response sendCachedMessages(List<Message> messages, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new SendCachedMessagesResponse(new Unauthenticated());
+        }
+
+        for (Message message : messages)
+        {
+            try
+            {
+                Database.getDB().saveMessage(message);
+            } catch (SQLException ignored) {}
+        }
+
+        return new SendCachedMessagesResponse(null);
+    }
+
+    @Override
+    public Response newChat(String username, String chatName, String token)
+    {
+        return null; // TODO write method
+    }
+
+    @Override
+    public Response addMember(Long chatId, String username, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new AddMemberResponse(new Unauthenticated());
+        }
+
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(Database.getDB().loadUser(username).getId());
+            Chat chat = Database.getDB().loadChat(chatId);
+            chat.getUsers().add(profile.getId());
+            profile.getChats().add(chatId);
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveChat(chat);
+        } catch (SQLException ignored) {}
+
+        return new AddMemberResponse(null);
+    }
+
+    @Override
+    public Response leaveGroup(Long chatId, String token)
+    {
+        if (!authToken.equals(token))
+        {
+            return new LeaveGroupResponse(new Unauthenticated());
+        }
+
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
+            Chat chat = Database.getDB().loadChat(chatId);
+            chat.getUsers().remove(profile.getId());
+            profile.getChats().remove(chatId);
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveChat(chat);
+        } catch (SQLException ignored) {}
+
+        return new LeaveGroupResponse(null);
+    }
+
+    @Override
     public Response userInteraction(String interaction, long userId, long otherUserId, String token)
     {
         if (!authToken.equals(token) || !loggedInUser.getId().equals(userId))
@@ -708,8 +861,8 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
-    public Response forwardTweet(String s, String s1, long l, String s2)
+    public Response forwardTweet(String usernames, String groups, long tweetId, String token)
     {
-        return null;
+        return null; // TODO write method
     }
 }

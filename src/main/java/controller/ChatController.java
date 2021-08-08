@@ -3,12 +3,81 @@ package controller;
 import db.Database;
 import model.Chat;
 import model.Message;
+import model.Profile;
 import model.User;
 
 import java.sql.SQLException;
+import java.util.*;
 
 public class ChatController
 {
+    public List<Long> getChatroom(Long chatId)
+    {
+        List<Long> messages = new LinkedList<>();
+        try
+        {
+            Chat chat = Database.getDB().loadChat(chatId);
+
+            for (Long messageId : chat.getMessages())
+            {
+                Message message = Database.getDB().loadMessage(messageId);
+                if (message.getMessageDate() < new Date().getTime())
+                {
+                    message.addToSeen(messageId);
+                }
+            }
+        } catch (SQLException ignored) {}
+
+        return messages;
+    }
+
+    public List<List<Long[]>> getMessagesList(long userId)
+    {
+        List<List<Long[]>> result = new LinkedList<>();
+        HashMap<Long, Long> chatsMap = new HashMap<>();
+
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(userId);
+
+            for (Long id : profile.getChats())
+            {
+                Chat chat = Database.getDB().loadChat(id);
+                chatsMap.put(- getLastMessageTime(chat), id);
+            }
+        } catch (SQLException ignored) {}
+
+        TreeMap<Long, Long> sortedChatsMap = new TreeMap<>(chatsMap);
+        List<Long> sortedChatsList = new LinkedList<>();
+
+        for (Map.Entry<Long, Long> e : sortedChatsMap.entrySet())
+        {
+            sortedChatsList.add(e.getValue());
+        }
+
+        for (int i = 0; i < sortedChatsList.size(); i = i+7)
+        {
+            List<Long[]> temp = new LinkedList<>();
+            temp.add(new Long[]{sortedChatsList.get(i), getUnseenCount(sortedChatsList.get(i), userId)});
+
+            for (int j = 1; j < 7; j++)
+            {
+                if (i + j < sortedChatsList.size())
+                {
+                    temp.add(new Long[]{sortedChatsList.get(i + j), getUnseenCount(sortedChatsList.get(i + j), userId)}
+                    );
+                }
+                else
+                {
+                    temp.add(new Long[]{-1L, -1L});
+                }
+            }
+            result.add(temp);
+        }
+
+        return result;
+    }
+
     public long getLastMessageTime(Chat chat)
     {
         if (chat.getMessages().size() != 0)
@@ -32,24 +101,28 @@ public class ChatController
         return 0;
     }
 
-    public int getUnseenCount(Chat chat, User user)
+    public long getUnseenCount(Long chatId, Long userId)
     {
-        int cnt = 0;
-        for (Long messageId : chat.getMessages())
+        Chat chat = null;
+        try
         {
-            Message message = null;
+            chat = Database.getDB().loadChat(chatId);
+        } catch (SQLException ignored) {}
+
+        long cnt = 0;
+        for (Long messageId : Objects.requireNonNull(chat).getMessages())
+        {
             try
             {
-                message = Database.getDB().loadMessage(messageId);
+                Message message = Database.getDB().loadMessage(messageId);
+                if (!message.getSeenList().contains(userId))
+                {
+                    cnt++;
+                }
             }
             catch (SQLException throwable)
             {
                 throwable.printStackTrace();
-            }
-            assert message != null;
-            if (!message.getSeenList().contains(user.getId()))
-            {
-                cnt++;
             }
         }
         return cnt;

@@ -6,6 +6,7 @@ import model.*;
 
 import java.sql.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Database
 {
@@ -485,7 +486,7 @@ public class Database
     {
         PreparedStatement statement;
         boolean exists = rowExists("messages", message.getId());
-        if (exists)
+        if (exists || message.getId() < 0)
         {
             statement = connection.prepareStatement(
                     "UPDATE `messages` SET `chat_id` = ?, `owner_id` = ?, `tweet_id` = ?, `index` = ?, `text` = ?, `picture` = ?, `message_date_unix` = ?, `seen_list` = ?, `sent` = ?, `received` = ?, `seen` = ? WHERE `id` = ?");
@@ -516,6 +517,23 @@ public class Database
             message.setId(maxTableId("messages"));
         }
         return loadMessage(message.getId());
+    }
+
+    public void receivedAllMessages(long userId) throws SQLException
+    {
+        Profile profile = loadProfile(userId);
+
+        PreparedStatement statement = null;
+        for (Long chatId : profile.getChats())
+        {
+            statement = connection.prepareStatement(
+                    "UPDATE `messages` SET `received` = ? WHERE `chat_id` = ? AND `owner_id` != ?");
+            statement.setBoolean(1, true);
+            statement.setLong(2, chatId);
+            statement.setLong(3, userId);
+            statement.executeQuery();
+        }
+        Objects.requireNonNull(statement).close();
     }
 
     public Notification loadNotification(long id) throws SQLException

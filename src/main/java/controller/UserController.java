@@ -57,7 +57,6 @@ public class UserController
     {
         try
         {
-            User otherUserAccount = Database.getDB().loadUser(otherUser);
             Profile ourUserProfile = Database.getDB().loadProfile(ourUser);
 
             if (ourUserProfile.getMuted().contains(otherUser))

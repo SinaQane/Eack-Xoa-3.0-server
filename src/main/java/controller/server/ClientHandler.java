@@ -15,6 +15,7 @@ import exceptions.DatabaseError;
 import exceptions.Unauthenticated;
 import exceptions.authentication.LoginFailed;
 import exceptions.authentication.SignUpFailed;
+import exceptions.messages.ChatCreationFailed;
 import model.*;
 import response.Response;
 import response.ResponseSender;
@@ -39,13 +40,14 @@ import response.responses.timeline.RefreshBookmarksResponse;
 import response.responses.timeline.RefreshTimelineResponse;
 import response.responses.timeline.ViewBookmarksResponse;
 import response.responses.timeline.ViewTimelineResponse;
+import response.responses.tweet.ForwardTweetResponse;
 import response.responses.tweet.TweetInteractionResponse;
 import util.ImageUtil;
 import util.Token;
 import util.Validations;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 public class ClientHandler extends Thread implements EventVisitor
 {
@@ -696,7 +698,27 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response sendMessage(MessageForm form, String token)
     {
-        return null; // TODO write method
+        if (!authToken.equals(token))
+        {
+            return new SendMessageResponse(new Unauthenticated());
+        }
+
+        Message message = new Message();
+        message.setText(form.getText());
+        message.setChatId(form.getChatId());
+        message.setOwnerId(form.getOwnerId());
+        message.setPicture(form.getBase64Picture());
+        message.setMessageDate(form.getMessageDate().equals(-1L) ? new Date().getTime() : form.getMessageDate());
+
+        try
+        {
+            message = Database.getDB().saveMessage(message);
+            Chat chat = Database.getDB().loadChat(message.getChatId());
+            chat.addToMessages(message.getId());
+            Database.getDB().saveChat(chat);
+        } catch (SQLException ignored) {}
+
+        return new SendMessageResponse(null);
     }
 
     @Override
@@ -757,7 +779,47 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response newChat(String username, String chatName, String token)
     {
-        return null; // TODO write method
+        if (!authToken.equals(token))
+        {
+            return new NewChatResponse(new Unauthenticated(), null);
+        }
+
+        if (username.equals(""))
+        {
+            try
+            {
+                Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
+                Chat chat = new Chat(loggedInUser, chatName);
+                chat = Database.getDB().saveChat(chat);
+                profile.addToChats(chat.getId());
+                Database.getDB().saveProfile(profile);
+            }
+            catch (SQLException ignored)
+            {
+                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
+            }
+        }
+        else if (chatName.equals(""))
+        {
+            try
+            {
+                User otherUser = Database.getDB().loadUser(username);
+                Profile loggedInUserProfile = Database.getDB().loadProfile(loggedInUser.getId());
+                Profile otherUserProfile = Database.getDB().loadProfile(otherUser.getId());
+                Chat chat = new Chat(loggedInUser, otherUser);
+                chat = Database.getDB().saveChat(chat);
+                loggedInUserProfile.addToChats(chat.getId());
+                otherUserProfile.addToChats(chat.getId());
+                Database.getDB().saveProfile(loggedInUserProfile);
+                Database.getDB().saveProfile(otherUserProfile);
+            }
+            catch (SQLException ignored)
+            {
+                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
+            }
+        }
+
+        return new NewChatResponse(null, null);
     }
 
     @Override
@@ -861,8 +923,65 @@ public class ClientHandler extends Thread implements EventVisitor
     }
 
     @Override
-    public Response forwardTweet(String usernames, String groups, long tweetId, String token)
+    public Response forwardTweet(String usernames, String groupNames, long tweetId, String token)
     {
-        return null; // TODO write method
+        if (!authToken.equals(token))
+        {
+            return new ForwardTweetResponse(null, new Unauthenticated());
+        }
+
+        GroupController groupController = new GroupController();
+        ChatController chatController = new ChatController();
+        List<Long> usersId = new LinkedList<>();
+
+        String[] usernamesArray = usernames.split(" ");
+        String[] groupNamesArray = groupNames.split(" ");
+
+        for (String username : usernamesArray)
+        {
+            try
+            {
+                User user = Database.getDB().loadUser(username);
+                if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
+                {
+                    usersId.add(user.getId());
+                }
+            } catch (SQLException ignored) {}
+        }
+
+        for (String groupName : groupNamesArray)
+        {
+            Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
+            for (Long userId : group.getMembers())
+            {
+                if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
+                {
+                    usersId.add(userId);
+                }
+            }
+        }
+
+        Tweet tweet = null;
+        try
+        {
+            tweet = Database.getDB().loadTweet(tweetId);
+        } catch (SQLException ignored) {}
+
+        for (Long userId : usersId)
+        {
+            Chat pv = chatController.getPv(loggedInUser.getId(), userId);
+            if (pv != null)
+            {
+                Message message = new Message(pv, loggedInUser, Objects.requireNonNull(tweet));
+                try
+                {
+                    message = Database.getDB().saveMessage(message);
+                    pv.addToMessages(message.getId());
+                    Database.getDB().saveChat(pv);
+                } catch (SQLException ignored) {}
+            }
+        }
+
+        return new ForwardTweetResponse(null, null);
     }
 }

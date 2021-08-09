@@ -4,7 +4,6 @@ import db.Database;
 import model.Chat;
 import model.Message;
 import model.Profile;
-import model.User;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -126,5 +125,32 @@ public class ChatController
             }
         }
         return cnt;
+    }
+
+    public Chat getPv(Long userId1, Long userId2)
+    {
+        Chat pv = null;
+
+        try
+        {
+            Profile profile1 = Database.getDB().loadProfile(userId1);
+            Profile profile2 = Database.getDB().loadProfile(userId2);
+
+            for (Long chatId : profile1.getChats())
+            {
+                if (profile2.getChats().contains(chatId))
+                {
+                    Chat chat = Database.getDB().loadChat(chatId);
+                    if (!chat.isGroup())
+                    {
+                        pv = chat;
+                        break;
+                    }
+                }
+            }
+
+        } catch (SQLException ignored) {}
+
+        return pv;
     }
 }

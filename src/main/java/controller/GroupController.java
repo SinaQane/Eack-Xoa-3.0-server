@@ -99,25 +99,35 @@ public class GroupController
     }
 
     // Finds a Group by its name from a profile
-    public Group getGroupByName(Profile profile, String groupName)
+    public Group getGroupByName(Long profileId, String groupName)
     {
-        for (Long groupId : profile.getGroups())
+        Profile profile = null;
+        try
         {
-            Group group = null;
-            try
+            profile = Database.getDB().loadProfile(profileId);
+        } catch (SQLException ignored) {}
+
+        if (profile != null)
+        {
+            for (Long groupId : profile.getGroups())
             {
-                group = Database.getDB().loadGroup(groupId);
-            }
-            catch (SQLException throwable)
-            {
-                throwable.printStackTrace();
-            }
-            assert group != null;
-            if (group.getTitle().equals(groupName))
-            {
-                return group;
+                Group group = null;
+                try
+                {
+                    group = Database.getDB().loadGroup(groupId);
+                }
+                catch (SQLException throwable)
+                {
+                    throwable.printStackTrace();
+                }
+                assert group != null;
+                if (group.getTitle().equals(groupName))
+                {
+                    return group;
+                }
             }
         }
+
         return null;
     }
 }

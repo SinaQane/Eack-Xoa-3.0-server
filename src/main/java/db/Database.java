@@ -244,7 +244,7 @@ public class Database
         return profile;
     }
 
-    public Profile saveProfile(Profile profile) throws SQLException {
+    public void saveProfile(Profile profile) throws SQLException {
         PreparedStatement statement;
         boolean exists = rowExists("profiles", profile.getId());
         if (exists)
@@ -286,7 +286,6 @@ public class Database
         {
             profile.setId(maxTableId("profiles"));
         }
-        return loadProfile(profile.getId());
     }
 
     public void updateLastSeen(long id)

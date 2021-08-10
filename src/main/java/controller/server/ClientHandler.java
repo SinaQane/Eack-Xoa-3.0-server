@@ -49,8 +49,13 @@ import util.Validations;
 import java.sql.SQLException;
 import java.util.*;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 public class ClientHandler extends Thread implements EventVisitor
 {
+    private static final Logger logger = LogManager.getLogger(ClientHandler.class);
+
     private final Token tokenGenerator = new Token();
     private final ResponseSender responseSender;
     private boolean running;
@@ -86,7 +91,11 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response ping(String ping)
     {
-        if (ping.equals("ping")) return new Pong();
+        if (ping.equals("ping"))
+        {
+            logger.info("application pinged with some client");
+            return new Pong();
+        }
 
         return null;
     }
@@ -102,6 +111,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting chat with id: %s", id));
             return new GetChatResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetChatResponse(null, new DatabaseError("given chat id doesn't exist"));
@@ -118,6 +128,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting group with id: %s", id));
             return new GetGroupResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetGroupResponse(null, new DatabaseError("given group id doesn't exist"));
@@ -134,6 +145,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting message with id: %s", id));
             return new GetMessageResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetMessageResponse(null, new DatabaseError("given message id doesn't exist"));
@@ -150,6 +162,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting notification with id: %s", id));
             return new GetNotificationResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetNotificationResponse(null, new DatabaseError("given notification id doesn't exist"));
@@ -166,6 +179,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting tweet with id: %s", id));
             return new GetTweetResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetTweetResponse(null, new DatabaseError("given tweet id doesn't exist"));
@@ -182,6 +196,7 @@ public class ClientHandler extends Thread implements EventVisitor
             }
         } catch (SQLException e)
         {
+            logger.error(String.format("database error while getting user with id: %s", id));
             return new GetUserResponse(null, null, new DatabaseError(e.getMessage()));
         }
         return new GetUserResponse(null, null, new DatabaseError("given user id doesn't exist"));
@@ -201,17 +216,24 @@ public class ClientHandler extends Thread implements EventVisitor
                 {
                     user.setActive(true);
                     user = Database.getDB().saveUser(user);
+                    logger.debug(String.format("user %s reactivated their account", user.getId()));
                 }
                 loggedInUser = user;
                 authToken = tokenGenerator.newToken();
                 Database.getDB().updateLastSeen(loggedInUser.getId());
+                logger.debug(String.format("user %s logged in", user.getId()));
                 return new LoginResponse(loggedInUser, authToken, null);
             }
             else
             {
+                logger.warn(String.format("wrong password login attempt to %s", user.getId()));
                 return new LoginResponse(null, "", new LoginFailed("wrong password"));
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while getting user %s", username));
+        }
         return new LoginResponse(null, "", new LoginFailed("user doesn't exist"));
     }
 
@@ -229,8 +251,13 @@ public class ClientHandler extends Thread implements EventVisitor
             loggedInUser = user;
             authToken = tokenGenerator.newToken();
             Database.getDB().updateLastSeen(id);
+            logger.debug(String.format("user %s logged in", user.getId()));
             return new OfflineLoginResponse(loggedInUser, authToken);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while getting user with id: %s", id));
+        }
         return new OfflineLoginResponse(null, "");
     }
 
@@ -298,8 +325,13 @@ public class ClientHandler extends Thread implements EventVisitor
 
             authToken = tokenGenerator.newToken();
 
+            logger.debug(String.format("user %s signed up", user.getId()));
             return new SignUpResponse(user, authToken, null);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while saving a new user");
+        }
 
         return new SignUpResponse(null, "", new SignUpFailed("signup failed for some internal reason"));
     }
@@ -309,12 +341,14 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new LogoutResponse(null, new Unauthenticated());
         }
 
         loggedInUser = null;
         authToken = "";
 
+        logger.debug(String.format("user %s logged out", id));
         return new LogoutResponse(null, null);
     }
 
@@ -323,6 +357,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(form.getAuthToken()))
         {
+            logger.warn(String.format("unauthenticated token: %s", form.getAuthToken()));
             return new SendTweetResponse(new Unauthenticated());
         }
 
@@ -345,8 +380,13 @@ public class ClientHandler extends Thread implements EventVisitor
                 Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
                 upperTweet.addComment(tweet.getId());
                 Database.getDB().saveTweet(upperTweet);
+                logger.info(String.format("new tweet was just tweeted with id: %s", tweet.getId()));
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while saving a new tweet");
+        }
 
         return new SendTweetResponse(null);
     }
@@ -359,7 +399,6 @@ public class ClientHandler extends Thread implements EventVisitor
         if (items == null) return new ViewListResponse("", null, null);
 
         return new ViewListResponse(list, loggedInUser, items);
-
     }
 
     @Override
@@ -393,13 +432,6 @@ public class ClientHandler extends Thread implements EventVisitor
                 break;
         }
 
-        if (items == null) return null;
-
-        try
-        {
-            loggedInUser = Database.getDB().loadUser(loggedInUser.getId());
-        } catch (SQLException ignored) {}
-
         return items;
     }
 
@@ -413,7 +445,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             Tweet tweet = Database.getDB().loadTweet(tweetId);
             return new ViewTweetResponse(tweet, comments);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading tweet with id: %s", tweetId));
+        }
 
         return new ViewTweetResponse(null, null);
     }
@@ -428,7 +464,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             Tweet tweet = Database.getDB().loadTweet(tweetId);
             return new ViewTweetResponse(tweet, comments);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading tweet with id: %s", tweetId));
+        }
 
         return new ViewTweetResponse(null, null);
     }
@@ -443,7 +483,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             User user = Database.getDB().loadUser(userId);
             return new ViewUserResponse(user, tweets);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading user with id: %s", userId));
+        }
 
         return new ViewUserResponse(null, null);
     }
@@ -458,7 +502,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             User user = Database.getDB().loadUser(userId);
             return new ViewUserResponse(user, tweets);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading user with id: %s", userId));
+        }
 
         return new RefreshUserResponse(null, null);
     }
@@ -468,6 +516,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new RequestReactionResponse(new Unauthenticated());
         }
 
@@ -476,12 +525,15 @@ public class ClientHandler extends Thread implements EventVisitor
         switch (reaction)
         {
             case "accept":
+                logger.debug(String.format("follow request with id %s was just accepted", notificationId));
                 controller.accept(notificationId);
                 break;
             case "good reject":
+                logger.debug(String.format("follow request with id %s was just rejected", notificationId));
                 controller.goodReject(notificationId);
                 break;
             case "bad reject":
+                logger.debug(String.format("follow request with id %s was just roasted", notificationId));
                 controller.badReject(notificationId);
                 break;
         }
@@ -496,6 +548,7 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             if (!authToken.equals(token))
             {
+                logger.warn(String.format("unauthenticated token: %s", token));
                 return new SettingsResponse(true, null, new Unauthenticated());
             }
         }
@@ -505,8 +558,13 @@ public class ClientHandler extends Thread implements EventVisitor
 
         try
         {
+            logger.fatal(String.format("user %s changed their account settings", userId));
             loggedInUser = Database.getDB().loadUser(loggedInUser.getId());
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while changing user settings with id: %s", userId));
+        }
 
         return new SettingsResponse(online, null, null);
     }
@@ -518,6 +576,7 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             if (!authToken.equals(token))
             {
+                logger.warn(String.format("unauthenticated token: %s", token));
                 return new DeleteAccountResponse(true, new Unauthenticated());
             }
         }
@@ -528,6 +587,7 @@ public class ClientHandler extends Thread implements EventVisitor
         loggedInUser = null;
         authToken = "";
 
+        logger.fatal(String.format("user %s just deleted their account :(((", userId));
         return new DeleteAccountResponse(online, null);
     }
 
@@ -538,6 +598,7 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             if (!authToken.equals(token))
             {
+                logger.warn(String.format("unauthenticated token: %s", token));
                 return new DeactivationResponse(true, new Unauthenticated());
             }
         }
@@ -548,6 +609,7 @@ public class ClientHandler extends Thread implements EventVisitor
         loggedInUser = null;
         authToken = "";
 
+        logger.fatal(String.format("user %s just deactivated their account :(", userId));
         return new DeactivationResponse(online, null);
     }
 
@@ -561,7 +623,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             User user = Database.getDB().loadUser(userId);
             return new ViewUserResponse(user, tweets);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading user with id: %s", userId));
+        }
 
         return new ViewUserResponse(null, null);
     }
@@ -576,7 +642,11 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             User user = Database.getDB().loadUser(userId);
             return new ViewUserResponse(user, tweets);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while loading user with id: %s", userId));
+        }
 
         return new ViewUserResponse(null, null);
     }
@@ -642,6 +712,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new ManageGroupsResponse(new Unauthenticated());
         }
 
@@ -656,13 +727,18 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new ReceivedAllMessagesResponse(new Unauthenticated());
         }
 
         try
         {
             Database.getDB().receivedAllMessages(userId);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while setting all %s messages received", userId));
+        }
 
         return new ReceivedAllMessagesResponse(null);
     }
@@ -700,6 +776,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new SendMessageResponse(new Unauthenticated());
         }
 
@@ -716,7 +793,12 @@ public class ClientHandler extends Thread implements EventVisitor
             Chat chat = Database.getDB().loadChat(message.getChatId());
             chat.addToMessages(message.getId());
             Database.getDB().saveChat(chat);
-        } catch (SQLException ignored) {}
+            logger.info(String.format("new message was just sent with id: %s", message.getId()));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while saving new message");
+        }
 
         return new SendMessageResponse(null);
     }
@@ -726,6 +808,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new EditMessageResponse(new Unauthenticated());
         }
 
@@ -734,7 +817,12 @@ public class ClientHandler extends Thread implements EventVisitor
             Message message = Database.getDB().loadMessage(form.getId());
             message.edit(form.getText());
             Database.getDB().saveMessage(message);
-        } catch (SQLException ignored) {}
+            logger.debug(String.format("message %s was just edited", form.getId()));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while editing message with id: %s", form.getId()));
+        }
 
         return new EditMessageResponse(null);
     }
@@ -744,6 +832,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new DeleteMessageResponse(new Unauthenticated());
         }
 
@@ -752,7 +841,12 @@ public class ClientHandler extends Thread implements EventVisitor
             Message message = Database.getDB().loadMessage(messageId);
             message.delete();
             Database.getDB().saveMessage(message);
-        } catch (SQLException ignored) {}
+            logger.debug(String.format("message %s was just deleted", messageId));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while deleting message with id: %s", messageId));
+        }
 
         return new DeleteMessageResponse(null);
     }
@@ -762,6 +856,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new SendCachedMessagesResponse(new Unauthenticated());
         }
 
@@ -770,7 +865,10 @@ public class ClientHandler extends Thread implements EventVisitor
             try
             {
                 Database.getDB().saveMessage(message);
-            } catch (SQLException ignored) {}
+            } catch (SQLException ignored)
+            {
+                logger.error("database error while saving received offline message");
+            }
         }
 
         return new SendCachedMessagesResponse(null);
@@ -781,6 +879,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new NewChatResponse(new Unauthenticated(), null);
         }
 
@@ -793,9 +892,11 @@ public class ClientHandler extends Thread implements EventVisitor
                 chat = Database.getDB().saveChat(chat);
                 profile.addToChats(chat.getId());
                 Database.getDB().saveProfile(profile);
+                logger.info(String.format("new chat was created with id: %s", chat.getId()));
             }
             catch (SQLException ignored)
             {
+                logger.error("database error while saving new created chat");
                 return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
             }
         }
@@ -812,9 +913,11 @@ public class ClientHandler extends Thread implements EventVisitor
                 otherUserProfile.addToChats(chat.getId());
                 Database.getDB().saveProfile(loggedInUserProfile);
                 Database.getDB().saveProfile(otherUserProfile);
+                logger.info(String.format("new pv was created with id: %s", chat.getId()));
             }
             catch (SQLException ignored)
             {
+                logger.error("database error while saving new created chat");
                 return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
             }
         }
@@ -827,6 +930,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new AddMemberResponse(new Unauthenticated());
         }
 
@@ -838,7 +942,12 @@ public class ClientHandler extends Thread implements EventVisitor
             profile.getChats().add(chatId);
             Database.getDB().saveProfile(profile);
             Database.getDB().saveChat(chat);
-        } catch (SQLException ignored) {}
+            logger.debug(String.format("user with username %s was added to chat %s", username, chatId));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while adding user with username %s to chat %s", username, chatId));
+        }
 
         return new AddMemberResponse(null);
     }
@@ -848,6 +957,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new LeaveGroupResponse(new Unauthenticated());
         }
 
@@ -859,7 +969,12 @@ public class ClientHandler extends Thread implements EventVisitor
             profile.getChats().remove(chatId);
             Database.getDB().saveProfile(profile);
             Database.getDB().saveChat(chat);
-        } catch (SQLException ignored) {}
+            logger.debug(String.format("user %s left group %s", profile.getId(), chat.getId()));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while leaving group %s", chatId));
+        }
 
         return new LeaveGroupResponse(null);
     }
@@ -869,6 +984,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token) || !loggedInUser.getId().equals(userId))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new UserInteractionResponse(new Unauthenticated());
         }
 
@@ -877,12 +993,15 @@ public class ClientHandler extends Thread implements EventVisitor
         switch (interaction)
         {
             case "change":
+                logger.debug(String.format("user %s changed follow status for user %s", userId, otherUserId));
                 controller.changeFollowStatus(userId, otherUserId);
                 break;
             case "block":
+                logger.warn(String.format("user %s blocked user %s", userId, otherUserId));
                 controller.block(userId, otherUserId);
                 break;
             case "mute":
+                logger.debug(String.format("user %s muted user %s", userId, otherUserId));
                 controller.mute(userId, otherUserId);
                 break;
         }
@@ -895,6 +1014,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token) || !loggedInUser.getId().equals(userId))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new TweetInteractionResponse(new Unauthenticated());
         }
 
@@ -903,18 +1023,23 @@ public class ClientHandler extends Thread implements EventVisitor
         switch (interaction)
         {
             case "upvote":
+                logger.info(String.format("user %s upvoted tweet %s", userId, tweetId));
                 controller.upvote(userId, tweetId);
                 break;
             case "downvote":
+                logger.info(String.format("user %s downvoted tweet %s", userId, tweetId));
                 controller.downvote(userId, tweetId);
                 break;
             case "retweet":
+                logger.info(String.format("user %s retweeted tweet %s", userId, tweetId));
                 controller.retweet(userId, tweetId);
                 break;
             case "save":
+                logger.info(String.format("user %s saved tweet %s", userId, tweetId));
                 controller.save(userId, tweetId);
                 break;
             case "report":
+                logger.warn(String.format("user %s reported tweet %s", userId, tweetId));
                 controller.report(userId, tweetId);
                 break;
         }
@@ -927,6 +1052,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         if (!authToken.equals(token))
         {
+            logger.warn(String.format("unauthenticated token: %s", token));
             return new ForwardTweetResponse(null, new Unauthenticated());
         }
 
@@ -965,7 +1091,11 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             tweet = Database.getDB().loadTweet(tweetId);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while getting tweet with id: %s", tweetId));
+        }
 
         for (Long userId : usersId)
         {
@@ -978,10 +1108,14 @@ public class ClientHandler extends Thread implements EventVisitor
                     message = Database.getDB().saveMessage(message);
                     pv.addToMessages(message.getId());
                     Database.getDB().saveChat(pv);
-                } catch (SQLException ignored) {}
+                } catch (SQLException ignored)
+                {
+                    logger.error(String.format("database error while forwarding tweet to %s", pv.getId()));
+                }
             }
         }
 
+        logger.debug(String.format("tweet with id %s was forwarded to a bunch of people", tweet));
         return new ForwardTweetResponse(null, null);
     }
 }

@@ -3,6 +3,7 @@ package controller.server;
 import config.Config;
 import constants.Constants;
 import controller.*;
+import controller.bot.BotController;
 import db.Database;
 import event.EventVisitor;
 import event.events.authentication.LoginForm;
@@ -312,7 +313,7 @@ public class ClientHandler extends Thread implements EventVisitor
         String picture = form.getPicture();
         if (picture.equals(""))
         {
-            picture = ImageUtil.imageToBytes(new Config(Constants.CONFIG).getProperty("profilePicture"));
+            picture = ImageUtil.imageToString(new Config(Constants.CONFIG).getProperty("profilePicture"));
         }
 
         Profile profile = new Profile();
@@ -539,6 +540,17 @@ public class ClientHandler extends Thread implements EventVisitor
         }
 
         return new RequestReactionResponse(null);
+    }
+
+    @Override
+    public Response refreshLastSeen(Long userId)
+    {
+        if (loggedInUser != null && loggedInUser.getId().equals(userId))
+        {
+            Database.getDB().updateLastSeen(userId);
+        }
+
+        return new RefreshLastSeenResponse();
     }
 
     @Override
@@ -786,6 +798,12 @@ public class ClientHandler extends Thread implements EventVisitor
         message.setOwnerId(form.getOwnerId());
         message.setPicture(form.getBase64Picture());
         message.setMessageDate(form.getMessageDate().equals(-1L) ? new Date().getTime() : form.getMessageDate());
+
+        BotController controller = new BotController();
+        if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))
+        {
+            controller.handleCommand(form.getChatId(), form.getText());
+        }
 
         try
         {
@@ -1056,66 +1074,17 @@ public class ClientHandler extends Thread implements EventVisitor
             return new ForwardTweetResponse(null, new Unauthenticated());
         }
 
-        GroupController groupController = new GroupController();
-        ChatController chatController = new ChatController();
-        List<Long> usersId = new LinkedList<>();
-
-        String[] usernamesArray = usernames.split(" ");
-        String[] groupNamesArray = groupNames.split(" ");
-
-        for (String username : usernamesArray)
-        {
-            try
-            {
-                User user = Database.getDB().loadUser(username);
-                if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
-                {
-                    usersId.add(user.getId());
-                }
-            } catch (SQLException ignored) {}
-        }
-
-        for (String groupName : groupNamesArray)
-        {
-            Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
-            for (Long userId : group.getMembers())
-            {
-                if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
-                {
-                    usersId.add(userId);
-                }
-            }
-        }
-
-        Tweet tweet = null;
+        TweetController controller = new TweetController();
         try
         {
-            tweet = Database.getDB().loadTweet(tweetId);
+            controller.forward(loggedInUser.getId(), tweetId, usernames, groupNames);
         }
         catch (SQLException ignored)
         {
-            logger.error(String.format("database error while getting tweet with id: %s", tweetId));
+            logger.error(String.format("database error while forwarding tweet %s", tweetId));
         }
 
-        for (Long userId : usersId)
-        {
-            Chat pv = chatController.getPv(loggedInUser.getId(), userId);
-            if (pv != null)
-            {
-                Message message = new Message(pv, loggedInUser, Objects.requireNonNull(tweet));
-                try
-                {
-                    message = Database.getDB().saveMessage(message);
-                    pv.addToMessages(message.getId());
-                    Database.getDB().saveChat(pv);
-                } catch (SQLException ignored)
-                {
-                    logger.error(String.format("database error while forwarding tweet to %s", pv.getId()));
-                }
-            }
-        }
-
-        logger.debug(String.format("tweet with id %s was forwarded to a bunch of people", tweet));
+        logger.debug(String.format("tweet with id %s was forwarded to a bunch of people", tweetId));
         return new ForwardTweetResponse(null, null);
     }
 }

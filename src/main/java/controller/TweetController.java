@@ -1,13 +1,12 @@
 package controller;
 
 import db.Database;
-import model.Profile;
-import model.Tweet;
-import model.User;
+import model.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class TweetController
 {
@@ -124,6 +123,64 @@ public class TweetController
                 Database.getDB().saveTweet(tweet);
             }
         } catch (SQLException ignored) {}
+    }
+
+    public void forward(long loggedInUserId, long tweetId, String usernames, String groupNames) throws SQLException
+    {
+        User loggedInUser = Database.getDB().loadUser(loggedInUserId);
+
+        GroupController groupController = new GroupController();
+        ChatController chatController = new ChatController();
+        List<Long> usersId = new LinkedList<>();
+
+        String[] usernamesArray = usernames.split(" ");
+        String[] groupNamesArray = groupNames.split(" ");
+
+        for (String username : usernamesArray)
+        {
+            try
+            {
+                User user = Database.getDB().loadUser(username);
+                if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
+                {
+                    usersId.add(user.getId());
+                }
+            } catch (SQLException ignored) {}
+        }
+
+        for (String groupName : groupNamesArray)
+        {
+            Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
+            for (Long userId : group.getMembers())
+            {
+                if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
+                {
+                    usersId.add(userId);
+                }
+            }
+        }
+
+        Tweet tweet = null;
+        try
+        {
+            tweet = Database.getDB().loadTweet(tweetId);
+        }
+        catch (SQLException ignored) {}
+
+        for (Long userId : usersId)
+        {
+            Chat pv = chatController.getPv(loggedInUser.getId(), userId);
+            if (pv != null)
+            {
+                Message message = new Message(pv, loggedInUser, Objects.requireNonNull(tweet));
+                try
+                {
+                    message = Database.getDB().saveMessage(message);
+                    pv.addToMessages(message.getId());
+                    Database.getDB().saveChat(pv);
+                } catch (SQLException ignored) {}
+            }
+        }
     }
 
     public List<List<Long>> getComments(long viewerId, long tweetId)

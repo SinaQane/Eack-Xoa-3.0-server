@@ -11,7 +11,7 @@ CREATE TABLE `eack_xoa_server`.`users`
     `email`        VARCHAR(64)  NOT NULL,
     `phone_number` VARCHAR(16)  NOT NULL,
     `bio`          VARCHAR(256) NOT NULL,
-    `birth_date`   DATETIME     NOT NULL DEFAULT '1000-01-01 00:00:00',
+    `birth_date`   BIGINT       NOT NULL,
     `is_active`    BOOL         NOT NULL,
     `is_deleted`   BOOL         NOT NULL,
     PRIMARY KEY (`id`)
@@ -21,7 +21,7 @@ CREATE TABLE `eack_xoa_server`.`profiles`
 (
     `id`               BIGINT   NOT NULL AUTO_INCREMENT,
     `picture`          LONGTEXT NOT NULL,
-    `last_seen`        DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+    `last_seen`        BIGINT   NOT NULL,
     `followers`        JSON     NOT NULL,
     `followings`       JSON     NOT NULL,
     `blocked`          JSON     NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE `eack_xoa_server`.`tweets`
     `picture`     LONGTEXT     NOT NULL,
     `visible`     BOOL         NOT NULL,
     `text`        VARCHAR(256) NOT NULL,
-    `tweet_date`  DATETIME     NOT NULL DEFAULT '1000-01-01 00:00:00',
+    `tweet_date`  BIGINT       NOT NULL,
     `comments`    JSON         NOT NULL,
     `upvotes`     JSON         NOT NULL,
     `downvotes`   JSON         NOT NULL,
@@ -109,4 +109,14 @@ CREATE TABLE `eack_xoa_server`.`notifications`
     PRIMARY KEY (`id`),
     FOREIGN KEY (`owner`) REFERENCES users (`id`),
     FOREIGN KEY (`request_from`) REFERENCES users (`id`)
+) ENGINE InnoDB;
+
+CREATE TABLE `eack_xoa_server`.`bots`
+(
+    `id`      BIGINT       NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT       NOT NULL,
+    `jar_url` VARCHAR(256) NOT NULL,
+    `kind`    int          NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`id`)
 ) ENGINE InnoDB;

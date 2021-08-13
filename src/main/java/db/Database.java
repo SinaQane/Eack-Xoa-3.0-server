@@ -101,6 +101,9 @@ public class Database
             case "notifications":
                 query = "SELECT MAX(`id`) AS `max_id` FROM `notifications`";
                 break;
+            case "bots":
+                query = "SELECT MAX(`id`) AS `max_id` FROM `bots`";
+                break;
         }
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet res = statement.executeQuery();
@@ -144,7 +147,7 @@ public class Database
             user.setBio(res.getString("bio"));
             user.setName(res.getString("name"));
             user.setEmail(res.getString("email"));
-            user.setBirthDate(res.getDate("birth_date"));
+            user.setBirthDate(new java.util.Date(res.getLong("birth_date")));
             user.setPhoneNumber(res.getString("phone_number"));
             user.setActive(res.getBoolean("is_active"));
             user.setDeleted(res.getBoolean("is_deleted"));
@@ -194,14 +197,14 @@ public class Database
         statement.setString(4, user.getEmail());
         statement.setString(5, user.getPhoneNumber());
         statement.setString(6, user.getBio());
-        statement.setDate(7, (Date) user.getBirthDate());
+        statement.setLong(7, user.getBirthDate().getTime());
         statement.setBoolean(8, user.isActive());
         statement.setBoolean(9, user.isDeleted());
         if (exists)
         {
             statement.setLong(10, user.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             user.setId(maxTableId("users"));
@@ -219,7 +222,7 @@ public class Database
         {
             profile.setId(id);
             profile.setPicture(res.getString("picture"));
-            profile.setLastSeen(res.getDate("last_seen"));
+            profile.setLastSeen(new java.util.Date(res.getLong("last_seen")));
             profile.setFollowers(Arrays.asList(gson.fromJson(res.getString("followers"), Long[].class)));
             profile.setFollowings(Arrays.asList(gson.fromJson(res.getString("followings"), Long[].class)));
             profile.setBlocked(Arrays.asList(gson.fromJson(res.getString("blocked"), Long[].class)));
@@ -258,7 +261,7 @@ public class Database
                     "INSERT INTO `profiles` (`picture`, `last_seen`, `followers`, `followings`, `blocked`, `muted`, `requests`, `pending`, `user_tweets`, `retweeted_tweets`, `upvoted_tweets`, `downvoted_tweets`, `reported_tweets`, `saved_tweets`, `notifications`, `groups`, `chats`, `private_state`, `info_state`, `last_seen_state`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         }
         statement.setString(1, profile.getPicture());
-        statement.setDate(2, (Date) profile.getLastSeen());
+        statement.setLong(2, profile.getLastSeen().getTime());
         statement.setString(3, new Gson().toJson(profile.getFollowers()));
         statement.setString(4, new Gson().toJson(profile.getFollowings()));
         statement.setString(5, new Gson().toJson(profile.getBlocked()));
@@ -281,7 +284,7 @@ public class Database
         {
             statement.setLong(21, profile.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             profile.setId(maxTableId("profiles"));
@@ -312,7 +315,7 @@ public class Database
             tweet.setPicture(res.getString("picture"));
             tweet.setVisible(res.getBoolean("visible"));
             tweet.setText(res.getString("text"));
-            tweet.setTweetDate(res.getDate("tweet_date"));
+            tweet.setTweetDate(new java.util.Date(res.getLong("tweet_date")));
             tweet.setComments(Arrays.asList(gson.fromJson(res.getString("comments"), Long[].class)));
             tweet.setUpvotes(Arrays.asList(gson.fromJson(res.getString("upvotes"), Long[].class)));
             tweet.setDownvotes(Arrays.asList(gson.fromJson(res.getString("downvotes"), Long[].class)));
@@ -343,7 +346,7 @@ public class Database
         statement.setString(3, tweet.getPicture());
         statement.setBoolean(4, tweet.isVisible());
         statement.setString(5, tweet.getText());
-        statement.setDate(6, (Date) tweet.getTweetDate());
+        statement.setLong(6, tweet.getTweetDate().getTime());
         statement.setString(7, new Gson().toJson(tweet.getComments()));
         statement.setString(8, new Gson().toJson(tweet.getUpvotes()));
         statement.setString(9, new Gson().toJson(tweet.getDownvotes()));
@@ -353,7 +356,7 @@ public class Database
         {
             statement.setLong(12, tweet.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             tweet.setId(maxTableId("tweets"));
@@ -398,7 +401,7 @@ public class Database
         {
             statement.setLong(3, group.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             group.setId(maxTableId("groups"));
@@ -447,7 +450,7 @@ public class Database
         {
             statement.setLong(5, chat.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             chat.setId(maxTableId("chats"));
@@ -510,7 +513,7 @@ public class Database
         {
             statement.setLong(12, message.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             message.setId(maxTableId("messages"));
@@ -530,7 +533,7 @@ public class Database
             statement.setBoolean(1, true);
             statement.setLong(2, chatId);
             statement.setLong(3, userId);
-            statement.executeQuery();
+            statement.executeUpdate();
         }
         Objects.requireNonNull(statement).close();
     }
@@ -574,11 +577,39 @@ public class Database
         {
             statement.setLong(4, notification.getId());
         }
-        statement.executeQuery();
+        statement.executeUpdate();
         if (!exists)
         {
             notification.setId(maxTableId("notifications"));
         }
         return loadNotification(notification.getId());
+    }
+
+    public Bot loadUserBot(long userId) throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `bots` WHERE `user_id` = ?");
+        statement.setLong(1, userId);
+        ResultSet res = statement.executeQuery();
+        Bot bot = new Bot();
+        while (res.next())
+        {
+            bot.setUserId(userId);
+            bot.setId(res.getLong("id"));
+            bot.setKind(res.getInt("kind"));
+            bot.setJarURL(res.getString("jar_url"));
+        }
+        res.close();
+        statement.close();
+        return bot;
+    }
+
+    public void saveBot(Bot bot) throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement(
+            "INSERT INTO `bots` (`user_id`, `jar_url`, `kind`) VALUES (?, ?, ?)");
+        statement.setLong(1, bot.getUserId());
+        statement.setString(2, bot.getJarURL());
+        statement.setInt(3, bot.getKind());
+        statement.executeUpdate();
     }
 }

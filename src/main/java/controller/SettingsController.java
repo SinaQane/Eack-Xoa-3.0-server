@@ -34,7 +34,7 @@ public class SettingsController
             {
                 if (form.getPicture().equals(""))
                 {
-                    profile.setPicture(ImageUtil.imageToBytes(new Config(Constants.CONFIG).getProperty("profilePicture")));
+                    profile.setPicture(ImageUtil.imageToString(new Config(Constants.CONFIG).getProperty("profilePicture")));
                 }
                 else
                 {

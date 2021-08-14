@@ -2,10 +2,10 @@ package model;
 
 public class Bot
 {
-    private Long id;
-    private Long userId;
-    private String jarURL;
-    private int kind; // kind = 1, 2 or 3
+    private Long id = -1L;
+    private Long userId = -1L;
+    private String jarURL = "";
+    private int kind = 1; // kind = 1, 2 or 3
 
     public Bot() {}
 

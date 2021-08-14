@@ -5,7 +5,9 @@ public class Bot
     private Long id = -1L;
     private Long userId = -1L;
     private String jarURL = "";
-    private int kind = 1; // kind = 1, 2 or 3
+
+    // kind is an integer showing that is the bot is a private bot (1), a two player game (2) or a group bot (3)
+    private int kind = 1;
 
     public Bot() {}
 

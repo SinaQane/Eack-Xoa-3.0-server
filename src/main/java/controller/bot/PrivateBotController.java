@@ -1,5 +1,6 @@
 package controller.bot;
 
+import bot.privatebot.PrivateBot;
 import config.Config;
 import constants.Constants;
 import db.Database;

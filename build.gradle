@@ -29,6 +29,9 @@ dependencies {
 
     // shared project url
     implementation files('../Eack Xoa (shared)/build/classes/java/main')
+
+    // bot template project url
+    implementation files('../Eack Xoa (template)/build/classes/java/main')
 }
 
 javafx {

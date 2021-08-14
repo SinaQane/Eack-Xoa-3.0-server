@@ -35,6 +35,8 @@ public class BotController
                 case "/start":
                 case "/join":
                 case "/move":
+                case "/make":
+                case "/vote":
                     break;
             }
         }

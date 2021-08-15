@@ -1,18 +1,14 @@
 package db;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import json.ListUtil;
 import model.*;
 
 import java.sql.*;
-import java.util.Arrays;
 
 public class Database
 {
     private static Connection connection;
-
-    private final GsonBuilder gsonBuilder = new GsonBuilder();
-    private final Gson gson = gsonBuilder.setPrettyPrinting().create();
 
     // Singleton class stuff
 
@@ -241,21 +237,21 @@ public class Database
             profile.setId(id);
             profile.setPicture(res.getString("picture"));
             profile.setLastSeen(new java.util.Date(res.getLong("last_seen")));
-            profile.setFollowers(Arrays.asList(gson.fromJson(res.getString("followers"), Long[].class)));
-            profile.setFollowings(Arrays.asList(gson.fromJson(res.getString("followings"), Long[].class)));
-            profile.setBlocked(Arrays.asList(gson.fromJson(res.getString("blocked"), Long[].class)));
-            profile.setMuted(Arrays.asList(gson.fromJson(res.getString("muted"), Long[].class)));
-            profile.setRequests(Arrays.asList(gson.fromJson(res.getString("requests"), Long[].class)));
-            profile.setPending(Arrays.asList(gson.fromJson(res.getString("pending"), Long[].class)));
-            profile.setUserTweets(Arrays.asList(gson.fromJson(res.getString("user_tweets"), Long[].class)));
-            profile.setRetweetedTweets(Arrays.asList(gson.fromJson(res.getString("retweeted_tweets"), Long[].class)));
-            profile.setUpvotedTweets(Arrays.asList(gson.fromJson(res.getString("upvoted_tweets"), Long[].class)));
-            profile.setDownvotedTweets(Arrays.asList(gson.fromJson(res.getString("downvoted_tweets"), Long[].class)));
-            profile.setReportedTweets(Arrays.asList(gson.fromJson(res.getString("reported_tweets"), Long[].class)));
-            profile.setSavedTweets(Arrays.asList(gson.fromJson(res.getString("saved_tweets"), Long[].class)));
-            profile.setNotifications(Arrays.asList(gson.fromJson(res.getString("notifications"), Long[].class)));
-            profile.setGroups(Arrays.asList(gson.fromJson(res.getString("groups"), Long[].class)));
-            profile.setChats(Arrays.asList(gson.fromJson(res.getString("chats"), Long[].class)));
+            profile.setFollowers(ListUtil.JsonToList(res.getString("followers")));
+            profile.setFollowings(ListUtil.JsonToList(res.getString("followings")));
+            profile.setBlocked(ListUtil.JsonToList(res.getString("blocked")));
+            profile.setMuted(ListUtil.JsonToList(res.getString("muted")));
+            profile.setRequests(ListUtil.JsonToList(res.getString("requests")));
+            profile.setPending(ListUtil.JsonToList(res.getString("pending")));
+            profile.setUserTweets(ListUtil.JsonToList(res.getString("user_tweets")));
+            profile.setRetweetedTweets(ListUtil.JsonToList(res.getString("retweeted_tweets")));
+            profile.setUpvotedTweets(ListUtil.JsonToList(res.getString("upvoted_tweets")));
+            profile.setDownvotedTweets(ListUtil.JsonToList(res.getString("downvoted_tweets")));
+            profile.setReportedTweets(ListUtil.JsonToList(res.getString("reported_tweets")));
+            profile.setSavedTweets(ListUtil.JsonToList(res.getString("saved_tweets")));
+            profile.setNotifications(ListUtil.JsonToList(res.getString("notifications")));
+            profile.setGroups(ListUtil.JsonToList(res.getString("groups")));
+            profile.setChats(ListUtil.JsonToList(res.getString("chats")));
             profile.setPrivateState(res.getBoolean("private_state"));
             profile.setInfoState(res.getBoolean("info_state"));
             profile.setLastSeenState(res.getInt("last_seen_state"));
@@ -337,10 +333,10 @@ public class Database
             tweet.setVisible(res.getBoolean("visible"));
             tweet.setText(res.getString("text"));
             tweet.setTweetDate(new java.util.Date(res.getLong("tweet_date")));
-            tweet.setComments(Arrays.asList(gson.fromJson(res.getString("comments"), Long[].class)));
-            tweet.setUpvotes(Arrays.asList(gson.fromJson(res.getString("upvotes"), Long[].class)));
-            tweet.setDownvotes(Arrays.asList(gson.fromJson(res.getString("downvotes"), Long[].class)));
-            tweet.setRetweets(Arrays.asList(gson.fromJson(res.getString("retweets"), Long[].class)));
+            tweet.setComments(ListUtil.JsonToList(res.getString("comments")));
+            tweet.setUpvotes(ListUtil.JsonToList(res.getString("upvotes")));
+            tweet.setDownvotes(ListUtil.JsonToList(res.getString("downvotes")));
+            tweet.setRetweets(ListUtil.JsonToList(res.getString("retweets")));
             tweet.setReports(res.getInt("reports"));
         }
         statement.close();
@@ -397,7 +393,7 @@ public class Database
         {
             group.setId(id);
             group.setTitle(res.getString("title"));
-            group.setMembers(Arrays.asList(gson.fromJson(res.getString("members"), Long[].class)));
+            group.setMembers(ListUtil.JsonToList(res.getString("members")));
         }
         statement.close();
         res.close();
@@ -450,8 +446,8 @@ public class Database
             chat.setId(id);
             chat.setChatName(res.getString("chat_name"));
             chat.setGroup(res.getBoolean("group"));
-            chat.setUsers(Arrays.asList(gson.fromJson(res.getString("users"), Long[].class)));
-            chat.setMessages(Arrays.asList(gson.fromJson(res.getString("messages"), Long[].class)));
+            chat.setUsers(ListUtil.JsonToList(res.getString("users")));
+            chat.setMessages(ListUtil.JsonToList(res.getString("messages")));
         }
         statement.close();
         res.close();
@@ -506,7 +502,7 @@ public class Database
             message.setText(res.getString("text"));
             message.setText(res.getString("picture"));
             message.setMessageDate(res.getLong("message_date_unix"));
-            message.setSeenList(Arrays.asList(gson.fromJson(res.getString("seen_list"), Long[].class)));
+            message.setSeenList(ListUtil.JsonToList(res.getString("seen_list")));
             message.setSent(res.getBoolean("sent"));
             message.setReceived(res.getBoolean("received"));
             message.setSeen(res.getBoolean("seen"));

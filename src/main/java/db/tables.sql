@@ -52,10 +52,10 @@ CREATE TABLE `eack_xoa_server`.`tweets`
     `visible`     BOOL         NOT NULL,
     `text`        VARCHAR(256) NOT NULL,
     `tweet_date`  BIGINT       NOT NULL,
-    `comments`    JSON         NOT NULL,
-    `upvotes`     JSON         NOT NULL,
-    `downvotes`   JSON         NOT NULL,
-    `retweets`    JSON         NOT NULL,
+    `comments`    JSON,
+    `upvotes`     JSON,
+    `downvotes`   JSON,
+    `retweets`    JSON,
     `reports`     INT          NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`owner`) REFERENCES users (`id`),
@@ -75,8 +75,8 @@ CREATE TABLE `eack_xoa_server`.`chats`
     `id`        BIGINT      NOT NULL AUTO_INCREMENT,
     `chat_name` VARCHAR(64) NOT NULL,
     `group`     BOOL        NOT NULL,
-    `users`     JSON        NOT NULL,
-    `messages`  JSON        NOT NULL,
+    `users`     JSON,
+    `messages`  JSON,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
@@ -120,3 +120,15 @@ CREATE TABLE `eack_xoa_server`.`bots`
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`id`)
 ) ENGINE InnoDB;
+
+INSERT INTO `eack_xoa_server`.`users`
+(`id`, `username`, `password`, `name`, `email`, `phone_number`, `bio`, `birth_date`, `is_active`, `is_deleted`)
+VALUES (-1, '', '', '', '', '', '', -1, false, true);
+
+INSERT INTO `eack_xoa_server`.`tweets`
+(`id`, `owner`, `upper_tweet`, `picture`, `visible`, `text`, `tweet_date`, `comments`, `upvotes`, `downvotes`,
+ `retweets`, `reports`)
+VALUES (-1, -1, -1, '', false, '', -1, null, null, null, null, -1);
+
+INSERT INTO `eack_xoa_server`.`chats` (`id`, `chat_name`, `group`, `users`, `messages`)
+VALUES (-1, '', false, null, null);

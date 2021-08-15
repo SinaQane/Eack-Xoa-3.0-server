@@ -1,0 +1,181 @@
+2021-08-14 14:03:36.719 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:06:00.868 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:06:33.851 [Thread-4] DEBUG controller.server.ClientHandler - user 2 signed up
+2021-08-14 14:09:20.598 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:09:35.358 [Thread-5] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:13:20.374 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:13:35.563 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:18:45.410 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:18:57.982 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:21:26.457 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:21:45.419 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:24:40.978 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:27:06.842 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:27:25.819 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:30:09.671 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:30:27.440 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:41:40.803 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:41:58.272 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:44:51.954 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 14:45:11.117 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 14:59:52.707 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:00:19.261 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:06:26.287 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:06:37.843 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:13:21.369 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:14:35.911 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:14:47.965 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:19:42.125 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:19:58.480 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:21:40.403 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:21:52.068 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:31:44.242 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:31:57.204 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:33:08.556 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-14 15:44:50.527 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:45:06.088 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 15:54:32.808 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:55:02.986 [Thread-3] DEBUG controller.server.ClientHandler - user 3 signed up
+2021-08-14 15:57:27.707 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 15:57:46.742 [Thread-4] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:23:59.355 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:24:11.605 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user sina
+2021-08-14 16:24:20.774 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user sina
+2021-08-14 16:24:37.874 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user hirbod
+2021-08-14 16:27:30.816 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:28:01.956 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user sina
+2021-08-14 16:31:06.012 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:31:13.862 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:31:13.931 [Thread-3] ERROR controller.server.ClientHandler - database error while setting all 2 messages received
+2021-08-14 16:31:14.127 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:15.225 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:17.268 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:19.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:21.227 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:23.268 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:25.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:27.227 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:29.267 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:31.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:33.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:35.268 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:37.227 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:38.767 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:39.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:41.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:43.267 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:45.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:47.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:49.272 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:51.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:53.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:55.271 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:57.226 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:31:59.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:01.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:03.327 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:05.325 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:07.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:09.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:11.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:13.368 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:15.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:17.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:19.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:21.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:23.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:25.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:27.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:29.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:31.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:33.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:35.325 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:37.368 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:39.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:41.325 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:43.368 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:45.327 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:47.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:49.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:51.325 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:53.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:55.367 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:57.326 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:32:59.325 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:33:01.371 [Thread-3] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:33:02.226 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-14 16:33:58.997 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:34:07.609 [Thread-4] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:34:07.705 [Thread-4] ERROR controller.server.ClientHandler - database error while setting all 2 messages received
+2021-08-14 16:34:07.805 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:09.047 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:11.004 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:13.004 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:15.047 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:17.004 [Thread-4] ERROR controller.server.ClientHandler - database error while getting user with id: 2
+2021-08-14 16:34:17.946 [Thread-4] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-14 16:41:12.881 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:41:24.239 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:43:08.132 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:43:16.261 [Thread-4] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:45:07.204 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:45:18.537 [Thread-5] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:59:06.034 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 16:59:17.101 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 16:59:25.467 [Thread-3] ERROR controller.server.ClientHandler - database error while saving a new tweet
+2021-08-14 17:01:33.553 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 17:01:41.215 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 17:01:55.589 [Thread-3] ERROR controller.server.ClientHandler - database error while saving a new tweet
+2021-08-14 17:26:41.344 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 17:26:48.162 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 17:30:01.814 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 17:30:09.769 [Thread-4] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-14 17:47:46.281 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 17:48:12.180 [Thread-3] DEBUG controller.server.ClientHandler - user 1 signed up
+2021-08-14 18:08:54.686 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:09:03.383 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:10:32.459 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:10:41.765 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:12:09.372 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:12:16.969 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:43:23.854 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:43:32.558 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:45:43.517 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:45:53.017 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:47:45.935 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:47:54.243 [Thread-5] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:50:40.570 [Thread-6] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:50:48.320 [Thread-6] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:53:55.803 [Thread-7] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:54:04.839 [Thread-7] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 18:56:40.261 [Thread-8] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 18:56:58.992 [Thread-8] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:00:59.533 [Thread-9] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:01:10.464 [Thread-9] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:03:40.545 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:03:50.002 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:08:38.169 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:08:49.451 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:13:36.063 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:13:46.722 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:22:37.960 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:22:47.167 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:26:20.301 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 19:26:36.071 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 19:30:08.206 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-14 21:02:41.683 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 21:02:51.489 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-14 21:03:56.021 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-14 21:04:38.984 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-14 21:04:50.007 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-15 08:57:44.262 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-15 08:57:55.069 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-15 09:10:58.618 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-15 09:11:27.207 [Thread-3] DEBUG controller.server.ClientHandler - user 2 signed up
+2021-08-15 09:11:40.905 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged in
+2021-08-15 09:14:42.782 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-15 09:15:31.808 [Thread-4] DEBUG controller.server.ClientHandler - user 3 signed up
+2021-08-15 09:15:38.344 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged in
+2021-08-15 09:24:47.290 [Thread-4] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-15 09:31:09.100 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-15 09:31:19.669 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged in

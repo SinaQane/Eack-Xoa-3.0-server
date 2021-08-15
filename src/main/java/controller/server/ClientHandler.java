@@ -324,8 +324,6 @@ public class ClientHandler extends Thread implements EventVisitor
             user = Database.getDB().saveUser(user);
             Database.getDB().saveProfile(profile);
 
-            authToken = tokenGenerator.newToken();
-
             logger.debug(String.format("user %s signed up", user.getId()));
             return new SignUpResponse(user, authToken, null);
         }
@@ -375,9 +373,12 @@ public class ClientHandler extends Thread implements EventVisitor
 
         try
         {
+            tweet = Database.getDB().saveTweet(tweet);
+            Profile profile = Database.getDB().loadProfile(tweetOwnerId);
+            profile.addToUserTweets(tweet.getId());
+            Database.getDB().saveProfile(profile);
             if (upperTweetId != -1)
             {
-                tweet = Database.getDB().saveTweet(tweet);
                 Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
                 upperTweet.addComment(tweet.getId());
                 Database.getDB().saveTweet(upperTweet);

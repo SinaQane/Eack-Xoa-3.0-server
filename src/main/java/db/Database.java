@@ -6,7 +6,6 @@ import model.*;
 
 import java.sql.*;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Database
 {
@@ -33,7 +32,6 @@ public class Database
     // Establish connection to the database
     public void connectToDatabase(String url, String username, String password) throws SQLException
     {
-
         connection = DriverManager.getConnection(url, username, password);
         Statement statement = connection.createStatement();
         statement.setQueryTimeout(30);
@@ -43,6 +41,11 @@ public class Database
     // Find out if there exists a row with given id in a table
     public boolean rowExists(String table, long id) throws SQLException
     {
+        if (id == -1L)
+        {
+            return false;
+        }
+
         String query = "";
         switch (table)
         {
@@ -71,7 +74,10 @@ public class Database
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
-        return res.next();
+        boolean ans = res.next();
+        statement.close();
+        res.close();
+        return ans;
     }
 
     // Get the max amount of the auto-generated id in a table
@@ -111,6 +117,8 @@ public class Database
         if (res.next()) {
             maxId = res.getLong("max_id");
         }
+        statement.close();
+        res.close();
         return maxId;
     }
 
@@ -133,7 +141,10 @@ public class Database
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, item);
         ResultSet res = statement.executeQuery();
-        return res.next();
+        boolean ans = res.next();
+        statement.close();
+        res.close();
+        return ans;
     }
 
     public User extractUser(ResultSet res) throws SQLException
@@ -157,12 +168,17 @@ public class Database
 
     public User loadUser(long id) throws SQLException
     {
+        if (id == -1)
+        {
+            return null;
+        }
+
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `users` WHERE `id` = ?");
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
         User user = extractUser(res);
-        res.close();
         statement.close();
+        res.close();
         return user;
     }
 
@@ -172,15 +188,16 @@ public class Database
         statement.setString(1, username);
         ResultSet res = statement.executeQuery();
         User user = extractUser(res);
-        res.close();
         statement.close();
+        res.close();
         return user;
     }
 
     public User saveUser(User user) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("users", user.getId());
+
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -205,6 +222,7 @@ public class Database
             statement.setLong(10, user.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             user.setId(maxTableId("users"));
@@ -242,14 +260,15 @@ public class Database
             profile.setInfoState(res.getBoolean("info_state"));
             profile.setLastSeenState(res.getInt("last_seen_state"));
         }
-        res.close();
         statement.close();
+        res.close();
         return profile;
     }
 
-    public void saveProfile(Profile profile) throws SQLException {
-        PreparedStatement statement;
+    public void saveProfile(Profile profile) throws SQLException
+    {
         boolean exists = rowExists("profiles", profile.getId());
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -285,10 +304,7 @@ public class Database
             statement.setLong(21, profile.getId());
         }
         statement.executeUpdate();
-        if (!exists)
-        {
-            profile.setId(maxTableId("profiles"));
-        }
+        statement.close();
     }
 
     public void updateLastSeen(long id)
@@ -303,6 +319,11 @@ public class Database
 
     public Tweet loadTweet(long id) throws SQLException
     {
+        if (id == -1)
+        {
+            return null;
+        }
+
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `tweets` WHERE `id` = ?");
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
@@ -322,15 +343,16 @@ public class Database
             tweet.setRetweets(Arrays.asList(gson.fromJson(res.getString("retweets"), Long[].class)));
             tweet.setReports(res.getInt("reports"));
         }
-        res.close();
         statement.close();
+        res.close();
         return tweet;
     }
 
     public Tweet saveTweet(Tweet tweet) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("tweets", tweet.getId());
+
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -357,6 +379,7 @@ public class Database
             statement.setLong(12, tweet.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             tweet.setId(maxTableId("tweets"));
@@ -376,15 +399,16 @@ public class Database
             group.setTitle(res.getString("title"));
             group.setMembers(Arrays.asList(gson.fromJson(res.getString("members"), Long[].class)));
         }
-        res.close();
         statement.close();
+        res.close();
         return group;
     }
 
     public Group saveGroup(Group group) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("groups", group.getId());
+
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -402,6 +426,7 @@ public class Database
             statement.setLong(3, group.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             group.setId(maxTableId("groups"));
@@ -411,6 +436,11 @@ public class Database
 
     public Chat loadChat(long id) throws SQLException
     {
+        if (id == -1)
+        {
+            return null;
+        }
+
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `chats` WHERE `id` = ?");
         statement.setLong(1, id);
         ResultSet res = statement.executeQuery();
@@ -423,15 +453,16 @@ public class Database
             chat.setUsers(Arrays.asList(gson.fromJson(res.getString("users"), Long[].class)));
             chat.setMessages(Arrays.asList(gson.fromJson(res.getString("messages"), Long[].class)));
         }
-        res.close();
         statement.close();
+        res.close();
         return chat;
     }
 
     public Chat saveChat(Chat chat) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("chats", chat.getId());
+
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -451,6 +482,7 @@ public class Database
             statement.setLong(5, chat.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             chat.setId(maxTableId("chats"));
@@ -479,15 +511,16 @@ public class Database
             message.setReceived(res.getBoolean("received"));
             message.setSeen(res.getBoolean("seen"));
         }
-        res.close();
         statement.close();
+        res.close();
         return message;
     }
 
     public Message saveMessage(Message message) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("messages", message.getId());
+
+        PreparedStatement statement;
         if (exists || message.getId() < 0)
         {
             statement = connection.prepareStatement(
@@ -514,6 +547,7 @@ public class Database
             statement.setLong(12, message.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             message.setId(maxTableId("messages"));
@@ -525,17 +559,16 @@ public class Database
     {
         Profile profile = loadProfile(userId);
 
-        PreparedStatement statement = null;
         for (Long chatId : profile.getChats())
         {
-            statement = connection.prepareStatement(
+            PreparedStatement statement = connection.prepareStatement(
                     "UPDATE `messages` SET `received` = ? WHERE `chat_id` = ? AND `owner_id` != ?");
             statement.setBoolean(1, true);
             statement.setLong(2, chatId);
             statement.setLong(3, userId);
             statement.executeUpdate();
+            statement.close();
         }
-        Objects.requireNonNull(statement).close();
     }
 
     public Notification loadNotification(long id) throws SQLException
@@ -551,15 +584,16 @@ public class Database
             notification.setRequestFrom(res.getLong("request_from"));
             notification.setText(res.getString("text"));
         }
-        res.close();
         statement.close();
+        res.close();
         return notification;
     }
 
     public Notification saveNotification(Notification notification) throws SQLException
     {
-        PreparedStatement statement;
         boolean exists = rowExists("notifications", notification.getId());
+
+        PreparedStatement statement;
         if (exists)
         {
             statement = connection.prepareStatement(
@@ -578,6 +612,7 @@ public class Database
             statement.setLong(4, notification.getId());
         }
         statement.executeUpdate();
+        statement.close();
         if (!exists)
         {
             notification.setId(maxTableId("notifications"));
@@ -598,8 +633,8 @@ public class Database
             bot.setKind(res.getInt("kind"));
             bot.setJarURL(res.getString("jar_url"));
         }
-        res.close();
         statement.close();
+        res.close();
         return bot;
     }
 
@@ -611,5 +646,6 @@ public class Database
         statement.setString(2, bot.getJarURL());
         statement.setInt(3, bot.getKind());
         statement.executeUpdate();
+        statement.close();
     }
 }

@@ -500,7 +500,7 @@ public class Database
             message.setTweetId(res.getLong("tweet_id"));
             message.setIndex(res.getInt("index"));
             message.setText(res.getString("text"));
-            message.setText(res.getString("picture"));
+            message.setPicture(res.getString("picture"));
             message.setMessageDate(res.getLong("message_date_unix"));
             message.setSeenList(ListUtil.JsonToList(res.getString("seen_list")));
             message.setSent(res.getBoolean("sent"));
@@ -517,7 +517,7 @@ public class Database
         boolean exists = rowExists("messages", message.getId());
 
         PreparedStatement statement;
-        if (exists || message.getId() < 0)
+        if (exists)
         {
             statement = connection.prepareStatement(
                     "UPDATE `messages` SET `chat_id` = ?, `owner_id` = ?, `tweet_id` = ?, `index` = ?, `text` = ?, `picture` = ?, `message_date_unix` = ?, `seen_list` = ?, `sent` = ?, `received` = ?, `seen` = ? WHERE `id` = ?");
@@ -558,7 +558,7 @@ public class Database
         for (Long chatId : profile.getChats())
         {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE `messages` SET `received` = ? WHERE `chat_id` = ? AND `owner_id` != ?");
+                    "UPDATE `messages` SET `received` = ? WHERE `chat_id` = ? AND `owner_id` <> ?");
             statement.setBoolean(1, true);
             statement.setLong(2, chatId);
             statement.setLong(3, userId);

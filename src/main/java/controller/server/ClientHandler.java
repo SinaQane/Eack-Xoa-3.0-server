@@ -228,7 +228,7 @@ public class ClientHandler extends Thread implements EventVisitor
             else
             {
                 logger.warn(String.format("wrong password login attempt to %s", user.getId()));
-                return new LoginResponse(null, "", new LoginFailed("wrong password"));
+                return new LoginResponse(null, "", new LoginFailed("wrong username or password"));
             }
         }
         catch (SQLException ignored)
@@ -800,6 +800,7 @@ public class ClientHandler extends Thread implements EventVisitor
         message.setOwnerId(form.getOwnerId());
         message.setPicture(form.getBase64Picture());
         message.setMessageDate(form.getMessageDate().equals(-1L) ? new Date().getTime() : form.getMessageDate());
+        message.setSent(true);
 
         BotController controller = new BotController();
         if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))

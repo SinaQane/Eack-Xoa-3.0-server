@@ -162,7 +162,8 @@ public class UserController
             try
             {
                 tweet = Database.getDB().loadTweet(userTweet);
-            } catch (SQLException throwable)
+            }
+            catch (SQLException throwable)
             {
                 throwable.printStackTrace();
             }
@@ -176,12 +177,13 @@ public class UserController
             try
             {
                 tweet = Database.getDB().loadTweet(retweetedTweet);
-            } catch (SQLException throwable)
+            }
+            catch (SQLException throwable)
             {
                 throwable.printStackTrace();
             }
             assert tweet != null;
-            homePageTweets.put(new Long[]{retweetedTweet, profile.getId()}, tweet.getTweetDate().getTime());
+            homePageTweets.put(new Long[]{retweetedTweet, profile.getId()}, tweet.getTweetDate().getTime() + 1);
         }
 
         List<Long[]> result = new LinkedList<>();

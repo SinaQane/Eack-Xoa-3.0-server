@@ -23,6 +23,7 @@ public class ChatController
                 if (message.getMessageDate() < new Date().getTime())
                 {
                     message.addToSeen(messageId);
+                    messages.add(messageId);
                 }
             }
         } catch (SQLException ignored) {}
@@ -114,7 +115,7 @@ public class ChatController
             try
             {
                 Message message = Database.getDB().loadMessage(messageId);
-                if (!message.getSeenList().contains(userId))
+                if (!message.getSeenList().contains(userId) && !message.getOwnerId().equals(userId))
                 {
                     cnt++;
                 }

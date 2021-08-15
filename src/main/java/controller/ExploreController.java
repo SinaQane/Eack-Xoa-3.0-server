@@ -118,7 +118,7 @@ public class ExploreController
                 }
                 else
                 {
-                    temp.add(1L);
+                    temp.add(-1L);
                 }
             }
             result.add(temp);

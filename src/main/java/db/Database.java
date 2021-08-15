@@ -1,7 +1,7 @@
 package db;
 
 import com.google.gson.Gson;
-import json.ListUtil;
+import util.ListUtil;
 import model.*;
 
 import java.sql.*;

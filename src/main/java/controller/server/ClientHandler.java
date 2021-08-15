@@ -370,6 +370,7 @@ public class ClientHandler extends Thread implements EventVisitor
         tweet.setUpperTweet(upperTweetId);
         tweet.setPicture(tweetPicture);
         tweet.setText(tweetText);
+        tweet.setTweetDate(new Date());
 
         try
         {

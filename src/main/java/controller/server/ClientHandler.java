@@ -805,7 +805,7 @@ public class ClientHandler extends Thread implements EventVisitor
         BotController controller = new BotController();
         if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))
         {
-            controller.handleCommand(form.getChatId(), form.getText());
+            controller.handleCommand(form.getOwnerId(), form.getChatId(), form.getText());
         }
 
         try

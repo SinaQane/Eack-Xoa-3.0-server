@@ -1,27 +1,50 @@
 package controller.bot;
 
+import config.Config;
+import constants.Constants;
 import db.Database;
-import model.Bot;
-import model.Chat;
-import model.Message;
-import model.User;
+import model.*;
+import util.ImageUtil;
+import util.Validations;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 public class BotController
 {
-    public void handleCommand(Long chatId, String input)
+    public BotException addBot(String username, String name, String url, int kind)
+    {
+        User user = new User();
+        user.setUsername(username);
+        user.setName(name);
+
+        try
+        {
+            if (Validations.getValidations().usernameIsUnavailable(username))
+            {
+                return new BotException("name is not available");
+            }
+            user = Database.getDB().saveUser(user);
+            Profile profile = new Profile();
+            profile.setPicture(ImageUtil.imageToString(new Config(Constants.CONFIG).getProperty("botPicture")));
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveBot(new Bot(kind, user.getId(), url));
+        }
+        catch (SQLException ignored)
+        {
+            return new BotException("database error while creating bot");
+        }
+
+        return null;
+    }
+
+    public void handleCommand(Long userId, Long chatId, String input)
     {
         String[] command = input.split(" ");
-        String output = "";
 
-        long botsUserId = -1L;
         Bot bot = null;
         try
         {
-            botsUserId = getBotsUserId(chatId);
-            bot = Database.getDB().loadUserBot(botsUserId);
+            bot = Database.getDB().loadUserBot(getBotsUserId(chatId));
         } catch (SQLException ignored) {}
 
         if (bot != null)
@@ -30,31 +53,21 @@ public class BotController
             {
                 case "/action":
                     PrivateBotController controller = new PrivateBotController();
-                    output = controller.botAction(bot, input);
+                    controller.botAction(bot, chatId, input);
                     break;
                 case "/start":
+                    GameBotController.getController().botStart(bot, userId);
+                    break;
                 case "/join":
+                    GameBotController.getController().botJoin(bot, userId, input);
+                    break;
                 case "/move":
+                    GameBotController.getController().botMove(bot, userId, input);
+                    break;
                 case "/make":
                 case "/vote":
                     break;
             }
-        }
-
-        if (!output.equals(""))
-        {
-            Message message = new Message();
-            message.setText(output);
-            message.setChatId(chatId);
-            message.setOwnerId(botsUserId);
-            message.setMessageDate(new Date().getTime());
-            try
-            {
-                message = Database.getDB().saveMessage(message);
-                Chat chat = Database.getDB().loadChat(chatId);
-                chat.addToMessages(message.getId());
-                Database.getDB().saveChat(chat);
-            } catch (SQLException ignored) {}
         }
     }
 

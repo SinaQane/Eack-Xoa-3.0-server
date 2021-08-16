@@ -2,7 +2,6 @@ package controller;
 
 import db.Database;
 import model.Profile;
-import model.Tweet;
 import util.Utilities;
 
 import java.sql.SQLException;

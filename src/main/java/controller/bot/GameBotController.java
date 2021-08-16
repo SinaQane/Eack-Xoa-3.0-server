@@ -83,7 +83,7 @@ public class GameBotController
             games.put(gameId, gameState);
 
             String output = gameState.getMessage();
-            returnOutput(bot, gameState, output);
+            returnOutput(bot, gameState, output + " " + gameState.getPrintedBoard());
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException ignored) {}
     }
 

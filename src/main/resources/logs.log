@@ -284,3 +284,6 @@
 2021-08-16 09:00:08.733 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to -1
 2021-08-16 09:00:15.026 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in
 2021-08-16 09:01:46.005 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged out
+2021-08-17 00:27:32.559 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 00:27:46.334 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to -1
+2021-08-17 00:27:51.413 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in

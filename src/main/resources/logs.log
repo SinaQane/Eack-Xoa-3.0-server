@@ -280,3 +280,7 @@
 2021-08-16 01:31:16.492 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 5
 2021-08-16 01:31:28.087 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 6
 2021-08-16 01:31:54.898 [Thread-3] DEBUG controller.server.ClientHandler - user 3 changed follow status for user 1
+2021-08-16 08:59:59.993 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-16 09:00:08.733 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to -1
+2021-08-16 09:00:15.026 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in
+2021-08-16 09:01:46.005 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged out

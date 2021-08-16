@@ -22,20 +22,37 @@ public class ExploreController
             TweetController controller = new TweetController();
             User viewer = Database.getDB().loadUser(userId);
 
-            int i = 1;
-
-            while (tweets.size() < 2 && allTweetsCount >= i * 20L)
+            if (allTweetsCount < 20L)
             {
-                for (int j = (i - 1) * 20; j < Math.min(i * 20L, allTweetsCount); j++)
+                for (int i = 1; i < allTweetsCount; i++)
                 {
-                    Tweet tweet = Database.getDB().loadTweet(j);
+                    Tweet tweet = Database.getDB().loadTweet(i);
                     if (controller.isValid(viewer, tweet))
                     {
                         tweets.add(tweet);
                     }
                 }
+            }
+            else
+            {
+                int i = 1;
 
-                i++;
+                while (tweets.size() < 2 && allTweetsCount >= i * 20L)
+                {
+                    for (int j = (i - 1) * 20; j < Math.min(i * 20L, allTweetsCount); j++)
+                    {
+                        if (j >= 1)
+                        {
+                            Tweet tweet = Database.getDB().loadTweet(j);
+                            if (controller.isValid(viewer, tweet))
+                            {
+                                tweets.add(tweet);
+                            }
+                        }
+                    }
+
+                    i++;
+                }
             }
         } catch (SQLException ignored) {}
 

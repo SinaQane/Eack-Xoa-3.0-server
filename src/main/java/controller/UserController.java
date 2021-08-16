@@ -154,6 +154,20 @@ public class UserController
         2. A long that shows the time that this tweet was tweeted, in milliseconds. */
     public List<Long[]> getHomePageTweets(Profile profile)
     {
+        HashMap<Long[], Long> homePageTweets = getHomePageTweetsHashMap(profile);
+
+        List<Long[]> result = new LinkedList<>();
+
+        for (Map.Entry<Long[], Long> e : Utilities.sortByValue(homePageTweets).entrySet())
+        {
+            result.add(0, e.getKey());
+        }
+
+        return result;
+    }
+
+    public HashMap<Long[], Long> getHomePageTweetsHashMap(Profile profile)
+    {
         HashMap<Long[], Long> homePageTweets = new HashMap<>();
 
         for (Long userTweet : profile.getUserTweets())
@@ -186,13 +200,6 @@ public class UserController
             homePageTweets.put(new Long[]{retweetedTweet, profile.getId()}, tweet.getTweetDate().getTime() + 1);
         }
 
-        List<Long[]> result = new LinkedList<>();
-
-        for (Map.Entry<Long[], Long> e : Utilities.sortByValue(homePageTweets).entrySet())
-        {
-            result.add(0, e.getKey());
-        }
-
-        return result;
+        return homePageTweets;
     }
 }

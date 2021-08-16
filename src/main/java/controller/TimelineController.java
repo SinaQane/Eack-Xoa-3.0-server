@@ -16,7 +16,6 @@ public class TimelineController
     public List<List<Long[]>> getTimeline(long userId)
     {
         HashMap<Long[], Long> unsortedTimeline = new HashMap<>();
-        List<Long[]> allTweets = new LinkedList<>();
         List<Long> users = new LinkedList<>();
         users.add(userId);
 
@@ -36,19 +35,14 @@ public class TimelineController
 
             for (Long user : users)
             {
-                allTweets.addAll(controller.getHomePageTweets(Database.getDB().loadProfile(user)));
-            }
-
-            for (Long[] tweetInfo : allTweets)
-            {
-                Tweet tempTweet = Database.getDB().loadTweet(tweetInfo[0]);
-                unsortedTimeline.put(tweetInfo, tempTweet.getTweetDate().getTime());
+                unsortedTimeline.putAll(controller.getHomePageTweetsHashMap(Database.getDB().loadProfile(user)));
             }
         } catch (SQLException ignored) {}
 
         List<Long[]> timeline = new LinkedList<>();
 
-        for (Map.Entry<Long[], Long> e : Utilities.sortByValue(unsortedTimeline).entrySet())
+        Map<Long[], Long> sortedTimeline = Utilities.sortByValue(unsortedTimeline);
+        for (Map.Entry<Long[], Long> e : sortedTimeline.entrySet())
         {
             timeline.add(0, e.getKey());
         }

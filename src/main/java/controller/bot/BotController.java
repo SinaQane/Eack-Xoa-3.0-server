@@ -65,7 +65,10 @@ public class BotController
                     GameBotController.getController().botMove(bot, userId, input);
                     break;
                 case "/make":
+                    GroupBotController.getController().botMake(bot, chatId, input);
+                    break;
                 case "/vote":
+                    GroupBotController.getController().botVote(bot, chatId, input);
                     break;
             }
         }

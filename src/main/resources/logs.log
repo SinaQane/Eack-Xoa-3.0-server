@@ -351,3 +351,16 @@
 2021-08-17 12:06:23.606 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
 2021-08-17 12:06:37.245 [Thread-3] WARN  controller.server.ClientHandler - user 4 reported tweet 8
 2021-08-17 12:07:03.419 [Thread-3] INFO  controller.server.ClientHandler - new tweet was just tweeted with id: 9
+2021-08-17 13:33:53.565 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 13:34:13.107 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 13:34:24.526 [Thread-3] INFO  controller.server.ClientHandler - new pv was created with id: 3
+2021-08-17 13:34:35.355 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 10
+2021-08-17 13:34:43.501 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 12
+2021-08-17 13:35:01.955 [Thread-3] DEBUG controller.server.ClientHandler - message 10 was just deleted
+2021-08-17 13:36:25.512 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 14
+2021-08-17 15:12:07.862 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:12:17.310 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to 4
+2021-08-17 15:12:23.593 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:12:43.794 [Thread-3] DEBUG controller.server.ClientHandler - tweet with id 9 was forwarded to a bunch of people
+2021-08-17 15:13:13.572 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-17 15:13:20.523 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in

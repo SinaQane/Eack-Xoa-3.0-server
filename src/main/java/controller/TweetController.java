@@ -138,24 +138,30 @@ public class TweetController
 
         for (String username : usernamesArray)
         {
-            try
+            if (!username.equals(""))
             {
-                User user = Database.getDB().loadUser(username);
-                if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
+                try
                 {
-                    usersId.add(user.getId());
-                }
-            } catch (SQLException ignored) {}
+                    User user = Database.getDB().loadUser(username);
+                    if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
+                    {
+                        usersId.add(user.getId());
+                    }
+                } catch (SQLException ignored) {}
+            }
         }
 
         for (String groupName : groupNamesArray)
         {
-            Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
-            for (Long userId : group.getMembers())
+            if (!groupName.equals(""))
             {
-                if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
+                Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
+                for (Long userId : group.getMembers())
                 {
-                    usersId.add(userId);
+                    if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
+                    {
+                        usersId.add(userId);
+                    }
                 }
             }
         }

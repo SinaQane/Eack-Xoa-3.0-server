@@ -211,24 +211,27 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             User user = Database.getDB().loadUser(username);
-            if (user.getPassword().equals(password))
+            if (!user.isDeleted())
             {
-                if (user.isDeactivated())
+                if (user.getPassword().equals(password))
                 {
-                    user.setActive(true);
-                    user = Database.getDB().saveUser(user);
-                    logger.debug(String.format("user %s reactivated their account", user.getId()));
+                    if (user.isDeactivated())
+                    {
+                        user.setActive(true);
+                        user = Database.getDB().saveUser(user);
+                        logger.debug(String.format("user %s reactivated their account", user.getId()));
+                    }
+                    loggedInUser = user;
+                    authToken = tokenGenerator.newToken();
+                    Database.getDB().updateLastSeen(loggedInUser.getId());
+                    logger.debug(String.format("user %s logged in", user.getId()));
+                    return new LoginResponse(loggedInUser, authToken, null);
                 }
-                loggedInUser = user;
-                authToken = tokenGenerator.newToken();
-                Database.getDB().updateLastSeen(loggedInUser.getId());
-                logger.debug(String.format("user %s logged in", user.getId()));
-                return new LoginResponse(loggedInUser, authToken, null);
-            }
-            else
-            {
-                logger.warn(String.format("wrong password login attempt to %s", user.getId()));
-                return new LoginResponse(null, "", new LoginFailed("wrong username or password"));
+                else
+                {
+                    logger.warn(String.format("wrong password login attempt to %s", user.getId()));
+                    return new LoginResponse(null, "", new LoginFailed("wrong username or password"));
+                }
             }
         }
         catch (SQLException ignored)

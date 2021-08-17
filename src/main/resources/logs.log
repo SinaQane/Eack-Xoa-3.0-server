@@ -448,3 +448,28 @@
 2021-08-17 19:56:56.510 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged out
 2021-08-17 20:00:37.335 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-17 20:00:44.902 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 23:40:51.188 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 23:41:04.146 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 23:41:42.573 [Thread-3] DEBUG controller.server.ClientHandler - user 4 changed follow status for user 2
+2021-08-17 23:42:10.044 [Thread-3] DEBUG controller.server.ClientHandler - user 4 changed follow status for user 3
+2021-08-17 23:42:33.544 [Thread-3] DEBUG controller.server.ClientHandler - user 4 changed follow status for user 5
+2021-08-17 23:42:59.701 [Thread-3] DEBUG controller.server.ClientHandler - user 4 changed follow status for user 6
+2021-08-17 23:43:42.302 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-18 01:02:56.192 [Thread-7] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:13:11.164 [Thread-12] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:13:11.516 [Thread-12] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:13:11.574 [Thread-12] WARN  controller.server.ClientHandler - unauthenticated token: 
+2021-08-18 01:16:47.393 [Thread-13] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:16:47.529 [Thread-13] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:16:47.566 [Thread-13] WARN  controller.server.ClientHandler - unauthenticated token: 
+2021-08-18 01:18:10.565 [Thread-13] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-18 01:23:39.773 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:23:39.934 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:29:44.976 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:29:45.135 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:31:25.835 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:31:25.992 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:33:06.838 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:33:41.234 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:33:41.357 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:36:22.899 [Thread-5] INFO  controller.server.ClientHandler - new message was just sent with id: 77

@@ -881,17 +881,13 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response sendCachedMessages(List<Message> messages, String token)
     {
-        if (!authToken.equals(token))
-        {
-            logger.warn(String.format("unauthenticated token: %s", token));
-            return new SendCachedMessagesResponse(new Unauthenticated());
-        }
-
         for (Message message : messages)
         {
             try
             {
-                Database.getDB().saveMessage(message);
+                message = Database.getDB().saveMessage(message);
+                Chat chat = Database.getDB().loadChat(message.getChatId());
+                chat.addToMessages(message.getId());
             } catch (SQLException ignored)
             {
                 logger.error("database error while saving received offline message");

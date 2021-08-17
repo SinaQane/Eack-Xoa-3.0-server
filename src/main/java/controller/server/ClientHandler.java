@@ -764,14 +764,14 @@ public class ClientHandler extends Thread implements EventVisitor
     public Response viewChatroom(Long chatId)
     {
         ChatController controller = new ChatController();
-        return new ViewChatroomResponse(controller.getChatroom(chatId), chatId);
+        return new ViewChatroomResponse(controller.getChatroom(loggedInUser.getId(), chatId), chatId);
     }
 
     @Override
     public Response refreshChatroom(Long chatId)
     {
         ChatController controller = new ChatController();
-        return new RefreshChatroomResponse(controller.getChatroom(chatId), chatId);
+        return new RefreshChatroomResponse(controller.getChatroom(loggedInUser.getId(), chatId), chatId);
     }
 
     @Override

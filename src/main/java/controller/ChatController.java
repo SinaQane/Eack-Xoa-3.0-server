@@ -10,7 +10,7 @@ import java.util.*;
 
 public class ChatController
 {
-    public List<Long> getChatroom(Long chatId)
+    public List<Long> getChatroom(Long userId, Long chatId)
     {
         List<Long> messages = new LinkedList<>();
         try
@@ -22,7 +22,8 @@ public class ChatController
                 Message message = Database.getDB().loadMessage(messageId);
                 if (message.getMessageDate() < new Date().getTime())
                 {
-                    message.addToSeen(messageId);
+                    message.addToSeen(userId);
+                    message.setSeen(true);
                     messages.add(messageId);
                 }
             }
@@ -117,7 +118,10 @@ public class ChatController
                 Message message = Database.getDB().loadMessage(messageId);
                 if (!message.getSeenList().contains(userId) && !message.getOwnerId().equals(userId))
                 {
-                    cnt++;
+                    if (message.getMessageDate() < new Date().getTime())
+                    {
+                        cnt++;
+                    }
                 }
             }
             catch (SQLException throwable)

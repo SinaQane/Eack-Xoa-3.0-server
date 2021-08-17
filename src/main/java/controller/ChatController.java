@@ -22,10 +22,13 @@ public class ChatController
                 Message message = Database.getDB().loadMessage(messageId);
                 if (message.getMessageDate() < new Date().getTime())
                 {
-                    if (!message.getSeenList().contains(userId)) message.addToSeen(userId);
-                    message.setSeen(true);
+                    if (!message.getSeenList().contains(userId) && !message.getOwnerId().equals(userId))
+                    {
+                        message.addToSeen(userId);
+                        message.setSeen(true);
+                        Database.getDB().saveMessage(message);
+                    }
                     messages.add(messageId);
-                    Database.getDB().saveMessage(message);
                 }
             }
         } catch (SQLException ignored) {}

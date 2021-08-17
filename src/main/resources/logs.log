@@ -395,3 +395,12 @@
 2021-08-17 16:03:35.874 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 40
 2021-08-17 16:03:49.378 [Thread-4] INFO  controller.server.ClientHandler - new message was just sent with id: 43
 2021-08-17 16:03:57.963 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 46
+2021-08-17 16:40:25.268 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:40:36.136 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 16:41:36.099 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 47
+2021-08-17 16:41:43.011 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 48
+2021-08-17 16:43:44.862 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:43:54.426 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 16:44:07.672 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 49
+2021-08-17 16:44:29.234 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:44:38.557 [Thread-4] DEBUG controller.server.ClientHandler - user 3 logged in

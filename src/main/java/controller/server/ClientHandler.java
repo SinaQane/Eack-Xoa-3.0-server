@@ -805,18 +805,19 @@ public class ClientHandler extends Thread implements EventVisitor
         message.setMessageDate(form.getMessageDate().equals(-1L) ? new Date().getTime() : form.getMessageDate());
         message.setSent(true);
 
-        BotController controller = new BotController();
-        if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))
-        {
-            controller.handleCommand(form.getOwnerId(), form.getChatId(), form.getText());
-        }
-
         try
         {
             message = Database.getDB().saveMessage(message);
             Chat chat = Database.getDB().loadChat(message.getChatId());
             chat.addToMessages(message.getId());
             Database.getDB().saveChat(chat);
+
+            BotController controller = new BotController();
+            if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))
+            {
+                controller.handleCommand(form.getOwnerId(), form.getChatId(), form.getText());
+            }
+
             logger.info(String.format("new message was just sent with id: %s", message.getId()));
         }
         catch (SQLException ignored)

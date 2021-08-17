@@ -404,3 +404,21 @@
 2021-08-17 16:44:07.672 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 49
 2021-08-17 16:44:29.234 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-17 16:44:38.557 [Thread-4] DEBUG controller.server.ClientHandler - user 3 logged in
+2021-08-17 16:47:53.024 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:48:02.984 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 16:52:34.754 [Thread-3] INFO  controller.server.ClientHandler - new chat was created with id: 6
+2021-08-17 16:52:44.753 [Thread-3] DEBUG controller.server.ClientHandler - user with username sina6 was added to chat 6
+2021-08-17 16:52:57.276 [Thread-3] DEBUG controller.server.ClientHandler - user with username vote_bot was added to chat 6
+2021-08-17 16:53:16.173 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 51
+2021-08-17 17:02:23.648 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:02:36.407 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:02:56.606 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 52
+2021-08-17 17:05:02.059 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:05:13.922 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:05:29.811 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 55
+2021-08-17 17:05:37.114 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 57
+2021-08-17 17:05:43.482 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 58
+2021-08-17 17:05:54.968 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 59
+2021-08-17 17:05:59.191 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 61
+2021-08-17 17:06:03.174 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 63
+2021-08-17 17:06:09.238 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 65

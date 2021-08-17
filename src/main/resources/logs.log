@@ -364,3 +364,34 @@
 2021-08-17 15:12:43.794 [Thread-3] DEBUG controller.server.ClientHandler - tweet with id 9 was forwarded to a bunch of people
 2021-08-17 15:13:13.572 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
 2021-08-17 15:13:20.523 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in
+2021-08-17 15:31:54.921 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:32:05.483 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:38:46.971 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:38:58.799 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:40:17.052 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:40:26.574 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:41:30.994 [Thread-6] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:41:40.523 [Thread-6] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:42:40.780 [Thread-7] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:42:49.612 [Thread-7] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:54:31.721 [Thread-8] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:54:41.453 [Thread-8] DEBUG controller.server.ClientHandler - user 3 logged in
+2021-08-17 15:54:58.795 [Thread-8] INFO  controller.server.ClientHandler - new pv was created with id: 4
+2021-08-17 15:55:24.596 [Thread-8] INFO  controller.server.ClientHandler - new message was just sent with id: 17
+2021-08-17 15:56:04.656 [Thread-9] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 15:56:14.391 [Thread-9] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 15:56:29.507 [Thread-9] INFO  controller.server.ClientHandler - new pv was created with id: 5
+2021-08-17 15:56:40.348 [Thread-9] INFO  controller.server.ClientHandler - new message was just sent with id: 20
+2021-08-17 15:56:57.231 [Thread-8] INFO  controller.server.ClientHandler - new message was just sent with id: 23
+2021-08-17 15:57:19.596 [Thread-9] INFO  controller.server.ClientHandler - new message was just sent with id: 26
+2021-08-17 16:01:22.663 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:01:32.625 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged in
+2021-08-17 16:02:06.064 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 28
+2021-08-17 16:02:25.385 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 16:02:35.407 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 16:02:48.522 [Thread-4] INFO  controller.server.ClientHandler - new message was just sent with id: 31
+2021-08-17 16:03:01.119 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 34
+2021-08-17 16:03:18.542 [Thread-4] INFO  controller.server.ClientHandler - new message was just sent with id: 37
+2021-08-17 16:03:35.874 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 40
+2021-08-17 16:03:49.378 [Thread-4] INFO  controller.server.ClientHandler - new message was just sent with id: 43
+2021-08-17 16:03:57.963 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 46

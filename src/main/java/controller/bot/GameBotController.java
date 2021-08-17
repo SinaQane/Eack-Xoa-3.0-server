@@ -108,7 +108,7 @@ public class GameBotController
             if (!output.equals(""))
             {
                 Message message = new Message();
-                message.setText(output);
+                message.setText("(id: " + gameState.getId() + ") - " + output);
                 message.setChatId(chatId);
                 message.setOwnerId(bot.getUserId());
                 message.setMessageDate(new Date().getTime());

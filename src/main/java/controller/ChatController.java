@@ -22,9 +22,10 @@ public class ChatController
                 Message message = Database.getDB().loadMessage(messageId);
                 if (message.getMessageDate() < new Date().getTime())
                 {
-                    message.addToSeen(userId);
+                    if (!message.getSeenList().contains(userId)) message.addToSeen(userId);
                     message.setSeen(true);
                     messages.add(messageId);
+                    Database.getDB().saveMessage(message);
                 }
             }
         } catch (SQLException ignored) {}
@@ -65,8 +66,7 @@ public class ChatController
             {
                 if (i + j < sortedChatsList.size())
                 {
-                    temp.add(new Long[]{sortedChatsList.get(i + j), getUnseenCount(sortedChatsList.get(i + j), userId)}
-                    );
+                    temp.add(new Long[]{sortedChatsList.get(i + j), getUnseenCount(sortedChatsList.get(i + j), userId)});
                 }
                 else
                 {

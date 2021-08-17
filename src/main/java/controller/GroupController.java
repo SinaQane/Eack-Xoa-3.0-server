@@ -60,13 +60,19 @@ public class GroupController
         {
             for (String username : toAdd)
             {
-                User user = Database.getDB().loadUser(username);
-                toAddId.add(user.getId());
+                if (!username.equals(""))
+                {
+                    User user = Database.getDB().loadUser(username);
+                    toAddId.add(user.getId());
+                }
             }
             for (String username : toRemove)
             {
-                User user = Database.getDB().loadUser(username);
-                toRemoveId.add(user.getId());
+                if (!username.equals(""))
+                {
+                    User user = Database.getDB().loadUser(username);
+                    toRemoveId.add(user.getId());
+                }
             }
 
             if (id.equals(-1L))

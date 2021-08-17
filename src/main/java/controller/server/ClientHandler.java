@@ -885,9 +885,12 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             try
             {
+                message.setMessageDate(message.getMessageDate() == -1L ? new Date().getTime() : message.getMessageDate());
+                message.setSent(true);
                 message = Database.getDB().saveMessage(message);
                 Chat chat = Database.getDB().loadChat(message.getChatId());
                 chat.addToMessages(message.getId());
+                Database.getDB().saveChat(chat);
             } catch (SQLException ignored)
             {
                 logger.error("database error while saving received offline message");

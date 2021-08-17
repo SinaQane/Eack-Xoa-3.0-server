@@ -473,3 +473,25 @@
 2021-08-18 01:33:41.234 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-18 01:33:41.357 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in
 2021-08-18 01:36:22.899 [Thread-5] INFO  controller.server.ClientHandler - new message was just sent with id: 77
+2021-08-18 01:44:24.148 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:44:24.315 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:44:53.867 [Thread-3] INFO  controller.server.ClientHandler - user 4 upvoted tweet 9
+2021-08-18 01:45:19.005 [Thread-3] INFO  controller.server.ClientHandler - user 4 retweeted tweet 9
+2021-08-18 01:46:08.888 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:46:09.057 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:46:09.110 [Thread-3] FATAL controller.server.ClientHandler - user 4 changed their account settings
+2021-08-18 01:46:13.701 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-18 01:46:19.104 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to 4
+2021-08-18 01:46:23.863 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-18 01:49:20.750 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:49:52.883 [Thread-4] DEBUG controller.server.ClientHandler - user 8 signed up
+2021-08-18 01:50:08.188 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:50:16.819 [Thread-5] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 01:50:30.284 [Thread-5] INFO  controller.server.ClientHandler - new pv was created with id: 7
+2021-08-18 01:50:42.865 [Thread-5] INFO  controller.server.ClientHandler - new message was just sent with id: 78
+2021-08-18 01:51:24.845 [Thread-6] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:51:24.969 [Thread-6] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 01:53:30.088 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:53:30.246 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 01:56:47.972 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 01:56:48.129 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in

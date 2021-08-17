@@ -33,6 +33,7 @@ import response.responses.groups.ManageGroupsResponse;
 import response.responses.groups.RefreshGroupsPageResponse;
 import response.responses.groups.ViewGroupsPageResponse;
 import response.responses.messages.*;
+import response.responses.profile.RefreshProfileResponse;
 import response.responses.profile.UserInteractionResponse;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
@@ -414,7 +415,7 @@ public class ClientHandler extends Thread implements EventVisitor
 
         if (items == null) return new ViewListResponse("", null, null);
 
-        return new ViewListResponse(list, loggedInUser, items);
+        return new RefreshListResponse(list, loggedInUser, items);
     }
 
     public List<List<Long>> getList(String list, long userId)
@@ -476,7 +477,7 @@ public class ClientHandler extends Thread implements EventVisitor
             logger.error(String.format("database error while loading tweet with id: %s", tweetId));
         }
 
-        return new ViewTweetResponse(null, null);
+        return new RefreshTweetResponse(null, null);
     }
 
     @Override
@@ -665,7 +666,7 @@ public class ClientHandler extends Thread implements EventVisitor
             logger.error(String.format("database error while loading user with id: %s", userId));
         }
 
-        return new ViewUserResponse(null, null);
+        return new RefreshProfileResponse(null, null);
     }
 
     @Override

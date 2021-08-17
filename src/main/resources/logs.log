@@ -422,3 +422,17 @@
 2021-08-17 17:05:59.191 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 61
 2021-08-17 17:06:03.174 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 63
 2021-08-17 17:06:09.238 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 65
+2021-08-17 17:12:53.752 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:13:03.616 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:13:49.877 [Thread-3] DEBUG controller.server.ClientHandler - tweet with id 9 was forwarded to a bunch of people
+2021-08-17 17:15:33.009 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 69
+2021-08-17 17:37:56.870 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:38:06.930 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:39:20.012 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:39:29.236 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:54:52.954 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:55:00.728 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:57:29.203 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 17:57:37.226 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 17:59:52.823 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 18:00:00.345 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in

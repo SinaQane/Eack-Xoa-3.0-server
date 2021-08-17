@@ -179,6 +179,7 @@ public class TweetController
             if (pv != null)
             {
                 Message message = new Message(pv, loggedInUser, Objects.requireNonNull(tweet));
+                message.setSent(true);
                 try
                 {
                     message = Database.getDB().saveMessage(message);

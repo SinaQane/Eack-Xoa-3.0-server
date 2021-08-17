@@ -35,6 +35,7 @@ import response.responses.groups.ViewGroupsPageResponse;
 import response.responses.messages.*;
 import response.responses.profile.RefreshProfileResponse;
 import response.responses.profile.UserInteractionResponse;
+import response.responses.profile.ViewProfileResponse;
 import response.responses.settings.DeactivationResponse;
 import response.responses.settings.DeleteAccountResponse;
 import response.responses.settings.SettingsResponse;
@@ -413,7 +414,7 @@ public class ClientHandler extends Thread implements EventVisitor
     {
         List<List<Long>> items = getList(list, userId);
 
-        if (items == null) return new ViewListResponse("", null, null);
+        if (items == null) return new RefreshListResponse("", null, null);
 
         return new RefreshListResponse(list, loggedInUser, items);
     }
@@ -470,7 +471,7 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             Tweet tweet = Database.getDB().loadTweet(tweetId);
-            return new ViewTweetResponse(tweet, comments);
+            return new RefreshTweetResponse(tweet, comments);
         }
         catch (SQLException ignored)
         {
@@ -508,7 +509,7 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             User user = Database.getDB().loadUser(userId);
-            return new ViewUserResponse(user, tweets);
+            return new RefreshUserResponse(user, tweets);
         }
         catch (SQLException ignored)
         {
@@ -640,14 +641,14 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             User user = Database.getDB().loadUser(userId);
-            return new ViewUserResponse(user, tweets);
+            return new ViewProfileResponse(user, tweets);
         }
         catch (SQLException ignored)
         {
             logger.error(String.format("database error while loading user with id: %s", userId));
         }
 
-        return new ViewUserResponse(null, null);
+        return new ViewProfileResponse(null, null);
     }
 
     @Override
@@ -659,7 +660,7 @@ public class ClientHandler extends Thread implements EventVisitor
         try
         {
             User user = Database.getDB().loadUser(userId);
-            return new ViewUserResponse(user, tweets);
+            return new RefreshProfileResponse(user, tweets);
         }
         catch (SQLException ignored)
         {

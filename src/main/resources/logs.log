@@ -436,3 +436,15 @@
 2021-08-17 17:57:37.226 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
 2021-08-17 17:59:52.823 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-17 18:00:00.345 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 19:51:03.540 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 19:51:13.685 [Thread-3] WARN  controller.server.ClientHandler - wrong password login attempt to 4
+2021-08-17 19:51:18.176 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 19:53:24.038 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 19:53:35.401 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 19:54:51.661 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 19:55:11.893 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 19:56:30.654 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 19:56:39.079 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged in
+2021-08-17 19:56:56.510 [Thread-5] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-17 20:00:37.335 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-17 20:00:44.902 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in

@@ -4,11 +4,15 @@ import db.Database;
 import model.Notification;
 import model.Profile;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 
 public class RequestController
 {
+    private static final Logger logger = LogManager.getLogger(RequestController.class);
+
     public void accept(long notificationId)
     {
         try
@@ -25,7 +29,11 @@ public class RequestController
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while accepting notification %s", notificationId));
+        }
     }
 
     public void goodReject(long notificationId)
@@ -42,7 +50,11 @@ public class RequestController
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while rejecting notification %s", notificationId));
+        }
     }
 
     public void badReject(long notificationId)
@@ -64,6 +76,10 @@ public class RequestController
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while rejecting notification %s", notificationId));
+        }
     }
 }

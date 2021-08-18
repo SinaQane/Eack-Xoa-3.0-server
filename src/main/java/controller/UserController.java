@@ -4,6 +4,8 @@ import db.Database;
 import model.Profile;
 import model.Tweet;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.Utilities;
 
 import java.sql.SQLException;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 public class UserController
 {
+    private static final Logger logger = LogManager.getLogger(UserController.class);
+
     public void changeFollowStatus(long ourUser, long otherUser)
     {
         try
@@ -50,7 +54,11 @@ public class UserController
 
             Database.getDB().saveProfile(ourUserProfile);
             Database.getDB().saveProfile(otherUserProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while changing %s's follow status for %s", ourUser, otherUser));
+        }
     }
 
     public void mute(long ourUser, long otherUser)
@@ -69,7 +77,11 @@ public class UserController
             }
 
             Database.getDB().saveProfile(ourUserProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while muting %s for %s", otherUser, ourUser));
+        }
     }
 
     public void block(long ourUser, long otherUser)
@@ -93,7 +105,11 @@ public class UserController
 
             Database.getDB().saveProfile(ourUserProfile);
             Database.getDB().saveProfile(otherUserProfile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while blocking %s for %s", otherUser, ourUser));
+        }
     }
 
     public List<List<Long[]>> getTweets(long viewerId, long userId)

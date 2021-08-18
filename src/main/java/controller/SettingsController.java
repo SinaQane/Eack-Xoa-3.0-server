@@ -6,12 +6,16 @@ import db.Database;
 import event.events.settings.SettingsForm;
 import model.Profile;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.ImageUtil;
 
 import java.sql.SQLException;
 
 public class SettingsController
 {
+    private static final Logger logger = LogManager.getLogger(SettingsController.class);
+
     public void editUser (SettingsForm form, long userId)
     {
         try
@@ -44,7 +48,11 @@ public class SettingsController
 
             Database.getDB().saveUser(user);
             Database.getDB().saveProfile(profile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while editing user %s", userId));
+        }
     }
 
     public void deactivate(long userId)
@@ -54,7 +62,11 @@ public class SettingsController
             User user = Database.getDB().loadUser(userId);
             user.setActive(false);
             Database.getDB().saveUser(user);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while deactivating user %s", userId));
+        }
     }
 
     public void deleteAccount(long userId)
@@ -69,6 +81,10 @@ public class SettingsController
             user.setDeleted(false);
 
             Database.getDB().saveUser(user);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while deleting account for user %s", userId));
+        }
     }
 }

@@ -1,15 +1,54 @@
 package controller;
 
 import db.Database;
+import event.events.general.SendTweetForm;
 import model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class TweetController
 {
+    private static final Logger logger = LogManager.getLogger(TweetController.class);
+
+    public void sendTweet(SendTweetForm form)
+    {
+        long tweetOwnerId = form.getUserId();
+        long upperTweetId = form.getUpperTweet();
+        String tweetPicture = form.getPicture();
+        String tweetText = form.getTweet();
+
+        Tweet tweet = new Tweet();
+        tweet.setOwner(tweetOwnerId);
+        tweet.setUpperTweet(upperTweetId);
+        tweet.setPicture(tweetPicture);
+        tweet.setText(tweetText);
+        tweet.setTweetDate(new Date());
+
+        try
+        {
+            tweet = Database.getDB().saveTweet(tweet);
+            Profile profile = Database.getDB().loadProfile(tweetOwnerId);
+            profile.addToUserTweets(tweet.getId());
+            Database.getDB().saveProfile(profile);
+            if (upperTweetId != -1)
+            {
+                Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
+                upperTweet.addComment(tweet.getId());
+                Database.getDB().saveTweet(upperTweet);
+                logger.info(String.format("new tweet was just tweeted with id: %s", tweet.getId()));
+            }
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while saving a new tweet");
+        }
+    }
+
     public void upvote(long viewer, long tweetId)
     {
         try
@@ -32,7 +71,11 @@ public class TweetController
 
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while upvoting a tweet");
+        }
     }
 
     public void downvote(long viewer, long tweetId)
@@ -57,7 +100,11 @@ public class TweetController
 
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while downvoting a tweet");
+        }
     }
 
     public void retweet(long viewer, long tweetId)
@@ -80,7 +127,11 @@ public class TweetController
 
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while retweeting a tweet");
+        }
     }
 
     public void save(long viewer, long tweetId)
@@ -99,7 +150,11 @@ public class TweetController
             }
 
             Database.getDB().saveProfile(profile);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while bookmarking a tweet");
+        }
     }
 
     public void report(long viewer, long tweetId)
@@ -122,72 +177,27 @@ public class TweetController
                 Database.getDB().saveProfile(profile);
                 Database.getDB().saveTweet(tweet);
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error("database error while reporting a tweet");
+        }
     }
 
-    public void forward(long loggedInUserId, long tweetId, String usernames, String groupNames) throws SQLException
+    public boolean isValid(User viewer, Tweet tweet) throws SQLException
     {
-        User loggedInUser = Database.getDB().loadUser(loggedInUserId);
+        User ownerUser = Database.getDB().loadUser(tweet.getOwner());
+        Profile ownerProfile = Database.getDB().loadProfile(tweet.getOwner());
+        Profile viewerProfile = Database.getDB().loadProfile(viewer.getId());
 
-        GroupController groupController = new GroupController();
-        ChatController chatController = new ChatController();
-        List<Long> usersId = new LinkedList<>();
+        if (ownerUser.getId().equals(viewer.getId())) return true;
+        if (viewerProfile.getMuted().contains(tweet.getOwner())) return false;
+        if (ownerProfile.getBlocked().contains(viewer.getId())) return false;
+        if (ownerUser.isDeactivated()) return false;
+        if (ownerUser.isDeleted()) return false;
+        if (!tweet.isVisible()) return false;
 
-        String[] usernamesArray = usernames.split(" ");
-        String[] groupNamesArray = groupNames.split(" ");
-
-        for (String username : usernamesArray)
-        {
-            if (!username.equals(""))
-            {
-                try
-                {
-                    User user = Database.getDB().loadUser(username);
-                    if (!usersId.contains(user.getId()) && !user.getId().equals(loggedInUser.getId()))
-                    {
-                        usersId.add(user.getId());
-                    }
-                } catch (SQLException ignored) {}
-            }
-        }
-
-        for (String groupName : groupNamesArray)
-        {
-            if (!groupName.equals(""))
-            {
-                Group group = groupController.getGroupByName(loggedInUser.getId(), groupName);
-                for (Long userId : group.getMembers())
-                {
-                    if (!usersId.contains(userId) && !userId.equals(loggedInUser.getId()))
-                    {
-                        usersId.add(userId);
-                    }
-                }
-            }
-        }
-
-        Tweet tweet = null;
-        try
-        {
-            tweet = Database.getDB().loadTweet(tweetId);
-        }
-        catch (SQLException ignored) {}
-
-        for (Long userId : usersId)
-        {
-            Chat pv = chatController.getPv(loggedInUser.getId(), userId);
-            if (pv != null)
-            {
-                Message message = new Message(pv, loggedInUser, Objects.requireNonNull(tweet));
-                message.setSent(true);
-                try
-                {
-                    message = Database.getDB().saveMessage(message);
-                    pv.addToMessages(message.getId());
-                    Database.getDB().saveChat(pv);
-                } catch (SQLException ignored) {}
-            }
-        }
+        return (!ownerProfile.isPrivate() || ownerProfile.getFollowers().contains(viewer.getId()));
     }
 
     public List<List<Long>> getComments(long viewerId, long tweetId)
@@ -210,7 +220,11 @@ public class TweetController
                     comments.add(commentId);
                 }
             }
-        } catch (SQLException ignored) {return null;}
+        }
+        catch (SQLException ignored)
+        {
+            return result;
+        }
 
         if (comments.size() == 0)
         {
@@ -237,40 +251,5 @@ public class TweetController
         }
 
         return result;
-    }
-
-    public boolean isValid(User viewer, Tweet tweet) throws SQLException
-    {
-        User ownerUser = Database.getDB().loadUser(tweet.getOwner());
-        Profile ownerProfile = Database.getDB().loadProfile(tweet.getOwner());
-        Profile viewerProfile = Database.getDB().loadProfile(viewer.getId());
-
-        if (ownerUser.getId().equals(viewer.getId()))
-        {
-            return true;
-        }
-
-        if (ownerUser.isDeleted())
-        {
-            return false;
-        }
-        if (ownerUser.isDeactivated())
-        {
-            return false;
-        }
-        if (!tweet.isVisible())
-        {
-            return false;
-        }
-        if (ownerProfile.getBlocked().contains(viewer.getId()))
-        {
-            return false;
-        }
-        if (viewerProfile.getMuted().contains(tweet.getOwner()))
-        {
-            return false;
-        }
-
-        return (!ownerProfile.isPrivate() || ownerProfile.getFollowers().contains(viewer.getId()));
     }
 }

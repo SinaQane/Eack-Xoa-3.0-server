@@ -5,6 +5,8 @@ import event.events.groups.ManageGroupForm;
 import model.Group;
 import model.Profile;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -12,6 +14,8 @@ import java.util.List;
 
 public class GroupController
 {
+    private static final Logger logger = LogManager.getLogger(GroupController.class);
+
     public List<List<Long>> getGroups(long userId)
     {
         List<Long> groups = new LinkedList<>();
@@ -42,7 +46,6 @@ public class GroupController
             }
             result.add(temp);
         }
-
         return result;
     }
 
@@ -101,7 +104,11 @@ public class GroupController
 
                 Database.getDB().saveGroup(group);
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while managing group %s", id));
+        }
     }
 
     // Finds a Group by its name from a profile
@@ -133,7 +140,6 @@ public class GroupController
                 }
             }
         }
-
         return null;
     }
 }

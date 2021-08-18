@@ -58,7 +58,6 @@ public class TimelineController
                 }
             } catch (SQLException ignored) {}
         }
-
         return createList(timeline);
     }
 
@@ -81,7 +80,6 @@ public class TimelineController
                 }
             }
         } catch (SQLException ignored) {}
-
         return createList(bookmarks);
     }
 
@@ -126,7 +124,6 @@ public class TimelineController
 
             result.add(temp);
         }
-
         return result;
     }
 }

@@ -1,9 +1,6 @@
 package controller.server;
 
-import config.Config;
-import constants.Constants;
 import controller.*;
-import controller.bot.BotController;
 import db.Database;
 import event.EventVisitor;
 import event.events.authentication.LoginForm;
@@ -14,9 +11,6 @@ import event.events.messages.MessageForm;
 import event.events.settings.SettingsForm;
 import exceptions.DatabaseError;
 import exceptions.Unauthenticated;
-import exceptions.authentication.LoginFailed;
-import exceptions.authentication.SignUpFailed;
-import exceptions.messages.ChatCreationFailed;
 import model.*;
 import response.Response;
 import response.ResponseSender;
@@ -24,7 +18,6 @@ import response.responses.Pong;
 import response.responses.authentication.LoginResponse;
 import response.responses.authentication.LogoutResponse;
 import response.responses.authentication.OfflineLoginResponse;
-import response.responses.authentication.SignUpResponse;
 import response.responses.database.*;
 import response.responses.explore.ExplorePageResponse;
 import response.responses.explore.SearchUserResponse;
@@ -45,9 +38,6 @@ import response.responses.timeline.ViewBookmarksResponse;
 import response.responses.timeline.ViewTimelineResponse;
 import response.responses.tweet.ForwardTweetResponse;
 import response.responses.tweet.TweetInteractionResponse;
-import util.ImageUtil;
-import util.Token;
-import util.Validations;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -59,7 +49,6 @@ public class ClientHandler extends Thread implements EventVisitor
 {
     private static final Logger logger = LogManager.getLogger(ClientHandler.class);
 
-    private final Token tokenGenerator = new Token();
     private final ResponseSender responseSender;
     private boolean running;
 
@@ -208,136 +197,34 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response login(LoginForm form)
     {
-        String username = form.getUsername();
-        String password = form.getPassword();
-        try
+        AuthController controller = new AuthController();
+        LoginResponse response = controller.login(form);
+        if (response.getErr() == null)
         {
-            User user = Database.getDB().loadUser(username);
-            if (!user.isDeleted())
-            {
-                if (user.getPassword().equals(password))
-                {
-                    if (user.isDeactivated())
-                    {
-                        user.setActive(true);
-                        user = Database.getDB().saveUser(user);
-                        logger.debug(String.format("user %s reactivated their account", user.getId()));
-                    }
-                    loggedInUser = user;
-                    authToken = tokenGenerator.newToken();
-                    Database.getDB().updateLastSeen(loggedInUser.getId());
-                    logger.debug(String.format("user %s logged in", user.getId()));
-                    return new LoginResponse(loggedInUser, authToken, null);
-                }
-                else
-                {
-                    logger.warn(String.format("wrong password login attempt to %s", user.getId()));
-                    return new LoginResponse(null, "", new LoginFailed("wrong username or password"));
-                }
-            }
+            loggedInUser = response.getUser();
+            authToken = response.getAuthToken();
         }
-        catch (SQLException ignored)
-        {
-            logger.error(String.format("database error while getting user %s", username));
-        }
-        return new LoginResponse(null, "", new LoginFailed("user doesn't exist"));
+        return response;
     }
 
     @Override
     public Response offlineLogin(long id)
     {
-        try
+        AuthController controller = new AuthController();
+        OfflineLoginResponse response = controller.offlineLogin(id);
+        if (response.getUser() != null)
         {
-            User user = Database.getDB().loadUser(id);
-            if (user.isDeactivated())
-            {
-                user.setActive(true);
-                user = Database.getDB().saveUser(user);
-            }
-            loggedInUser = user;
-            authToken = tokenGenerator.newToken();
-            Database.getDB().updateLastSeen(id);
-            logger.debug(String.format("user %s logged in", user.getId()));
-            return new OfflineLoginResponse(loggedInUser, authToken);
+            loggedInUser = response.getUser();
+            authToken = response.getAuthToken();
         }
-        catch (SQLException ignored)
-        {
-            logger.error(String.format("database error while getting user with id: %s", id));
-        }
-        return new OfflineLoginResponse(null, "");
+        return response;
     }
 
     @Override
     public Response signUp(SignUpForm form)
     {
-        String phoneNumber = form.getPhoneNumber();
-        String username = form.getUsername();
-        String password = form.getPassword();
-        String email = form.getEmail();
-        String name = form.getName();
-
-        if (name.equals(""))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("name cannot be empty"));
-        }
-        if (Validations.getValidations().usernameIsInvalid(username))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("please enter a valid username"));
-        }
-        if (Validations.getValidations().usernameIsUnavailable(username))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("there is already an account with this username"));
-        }
-        if (Validations.getValidations().emailIsInvalid(email))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("please enter a valid email"));
-        }
-        if (Validations.getValidations().emailIsUnavailable(email))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("there is already an account with this email"));
-        }
-        if (Validations.getValidations().phoneNumberIsInvalid(phoneNumber))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("please enter a valid phone number"));
-        }
-        if (Validations.getValidations().phoneNumberIsUnavailable(phoneNumber))
-        {
-            return new SignUpResponse(null, "", new SignUpFailed("there is already an account with this phone number"));
-        }
-
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setPhoneNumber(phoneNumber);
-        user.setPhoneNumber(form.getPhoneNumber());
-        user.setBirthDate(form.getBirthDate());
-        user.setEmail(form.getEmail());
-
-        String picture = form.getPicture();
-        if (picture.equals(""))
-        {
-            picture = ImageUtil.imageToString(new Config(Constants.CONFIG).getProperty("profilePicture"));
-        }
-
-        Profile profile = new Profile();
-        profile.setPicture(picture);
-
-        try
-        {
-            user = Database.getDB().saveUser(user);
-            Database.getDB().saveProfile(profile);
-
-            logger.debug(String.format("user %s signed up", user.getId()));
-            return new SignUpResponse(user, authToken, null);
-        }
-        catch (SQLException ignored)
-        {
-            logger.error("database error while saving a new user");
-        }
-
-        return new SignUpResponse(null, "", new SignUpFailed("signup failed for some internal reason"));
+        AuthController controller = new AuthController();
+        return controller.signUp(form);
     }
 
     @Override
@@ -365,36 +252,8 @@ public class ClientHandler extends Thread implements EventVisitor
             return new SendTweetResponse(new Unauthenticated());
         }
 
-        long tweetOwnerId = form.getUserId();
-        long upperTweetId = form.getUpperTweet();
-        String tweetPicture = form.getPicture();
-        String tweetText = form.getTweet();
-
-        Tweet tweet = new Tweet();
-        tweet.setOwner(tweetOwnerId);
-        tweet.setUpperTweet(upperTweetId);
-        tweet.setPicture(tweetPicture);
-        tweet.setText(tweetText);
-        tweet.setTweetDate(new Date());
-
-        try
-        {
-            tweet = Database.getDB().saveTweet(tweet);
-            Profile profile = Database.getDB().loadProfile(tweetOwnerId);
-            profile.addToUserTweets(tweet.getId());
-            Database.getDB().saveProfile(profile);
-            if (upperTweetId != -1)
-            {
-                Tweet upperTweet = Database.getDB().loadTweet(upperTweetId);
-                upperTweet.addComment(tweet.getId());
-                Database.getDB().saveTweet(upperTweet);
-                logger.info(String.format("new tweet was just tweeted with id: %s", tweet.getId()));
-            }
-        }
-        catch (SQLException ignored)
-        {
-            logger.error("database error while saving a new tweet");
-        }
+        TweetController controller = new TweetController();
+        controller.sendTweet(form);
 
         return new SendTweetResponse(null);
     }
@@ -799,33 +658,8 @@ public class ClientHandler extends Thread implements EventVisitor
             return new SendMessageResponse(new Unauthenticated());
         }
 
-        Message message = new Message();
-        message.setText(form.getText());
-        message.setChatId(form.getChatId());
-        message.setOwnerId(form.getOwnerId());
-        message.setPicture(form.getBase64Picture());
-        message.setMessageDate(form.getMessageDate().equals(-1L) ? new Date().getTime() : form.getMessageDate());
-        message.setSent(true);
-
-        try
-        {
-            message = Database.getDB().saveMessage(message);
-            Chat chat = Database.getDB().loadChat(message.getChatId());
-            chat.addToMessages(message.getId());
-            Database.getDB().saveChat(chat);
-
-            BotController controller = new BotController();
-            if (form.getText().startsWith("/") && controller.hasBot(form.getChatId()))
-            {
-                controller.handleCommand(form.getOwnerId(), form.getChatId(), form.getText());
-            }
-
-            logger.info(String.format("new message was just sent with id: %s", message.getId()));
-        }
-        catch (SQLException ignored)
-        {
-            logger.error("database error while saving new message");
-        }
+        MessageController controller = new MessageController();
+        controller.sendMessage(form);
 
         return new SendMessageResponse(null);
     }
@@ -881,21 +715,8 @@ public class ClientHandler extends Thread implements EventVisitor
     @Override
     public Response sendCachedMessages(List<Message> messages, String token)
     {
-        for (Message message : messages)
-        {
-            try
-            {
-                message.setMessageDate(message.getMessageDate() == -1L ? new Date().getTime() : message.getMessageDate());
-                message.setSent(true);
-                message = Database.getDB().saveMessage(message);
-                Chat chat = Database.getDB().loadChat(message.getChatId());
-                chat.addToMessages(message.getId());
-                Database.getDB().saveChat(chat);
-            } catch (SQLException ignored)
-            {
-                logger.error("database error while saving received offline message");
-            }
-        }
+        MessageController controller = new MessageController();
+        controller.sendCachedMessages(messages);
 
         return new SendCachedMessagesResponse(null);
     }
@@ -909,50 +730,8 @@ public class ClientHandler extends Thread implements EventVisitor
             return new NewChatResponse(new Unauthenticated(), null);
         }
 
-        if (username.equals(""))
-        {
-            try
-            {
-                Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
-                Chat chat = new Chat(loggedInUser, chatName);
-                chat = Database.getDB().saveChat(chat);
-                profile.addToChats(chat.getId());
-                Database.getDB().saveProfile(profile);
-                logger.info(String.format("new chat was created with id: %s", chat.getId()));
-            }
-            catch (SQLException ignored)
-            {
-                logger.error("database error while saving new created chat");
-                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
-            }
-        }
-        else if (chatName.equals(""))
-        {
-            try
-            {
-                User otherUser = Database.getDB().loadUser(username);
-                Profile loggedInUserProfile = Database.getDB().loadProfile(loggedInUser.getId());
-                Profile otherUserProfile = Database.getDB().loadProfile(otherUser.getId());
-                if (!otherUserProfile.getBlocked().contains(loggedInUserProfile.getId()) && !otherUser.isDeleted() && !otherUser.isDeactivated()
-                        && (otherUserProfile.getFollowers().contains(loggedInUserProfile.getId()) || otherUserProfile.getFollowings().contains(loggedInUserProfile.getId())))
-                {
-                    Chat chat = new Chat(loggedInUser, otherUser);
-                    chat = Database.getDB().saveChat(chat);
-                    loggedInUserProfile.addToChats(chat.getId());
-                    otherUserProfile.addToChats(chat.getId());
-                    Database.getDB().saveProfile(loggedInUserProfile);
-                    Database.getDB().saveProfile(otherUserProfile);
-                    logger.info(String.format("new pv was created with id: %s", chat.getId()));
-                }
-            }
-            catch (SQLException ignored)
-            {
-                logger.error("database error while saving new created chat");
-                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
-            }
-        }
-
-        return new NewChatResponse(null, null);
+        ChatController controller = new ChatController();
+        return controller.newChat(loggedInUser, username, chatName);
     }
 
     @Override
@@ -964,20 +743,8 @@ public class ClientHandler extends Thread implements EventVisitor
             return new AddMemberResponse(new Unauthenticated());
         }
 
-        try
-        {
-            Profile profile = Database.getDB().loadProfile(Database.getDB().loadUser(username).getId());
-            Chat chat = Database.getDB().loadChat(chatId);
-            chat.getUsers().add(profile.getId());
-            profile.getChats().add(chatId);
-            Database.getDB().saveProfile(profile);
-            Database.getDB().saveChat(chat);
-            logger.debug(String.format("user with username %s was added to chat %s", username, chatId));
-        }
-        catch (SQLException ignored)
-        {
-            logger.error(String.format("database error while adding user with username %s to chat %s", username, chatId));
-        }
+        ChatController controller = new ChatController();
+        controller.addMember(chatId, username);
 
         return new AddMemberResponse(null);
     }
@@ -991,20 +758,8 @@ public class ClientHandler extends Thread implements EventVisitor
             return new LeaveGroupResponse(new Unauthenticated());
         }
 
-        try
-        {
-            Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
-            Chat chat = Database.getDB().loadChat(chatId);
-            chat.getUsers().remove(profile.getId());
-            profile.getChats().remove(chatId);
-            Database.getDB().saveProfile(profile);
-            Database.getDB().saveChat(chat);
-            logger.debug(String.format("user %s left group %s", profile.getId(), chat.getId()));
-        }
-        catch (SQLException ignored)
-        {
-            logger.error(String.format("database error while leaving group %s", chatId));
-        }
+        ChatController controller = new ChatController();
+        controller.leaveGroup(loggedInUser, chatId);
 
         return new LeaveGroupResponse(null);
     }
@@ -1086,10 +841,10 @@ public class ClientHandler extends Thread implements EventVisitor
             return new ForwardTweetResponse(null, new Unauthenticated());
         }
 
-        TweetController controller = new TweetController();
+        MessageController controller = new MessageController();
         try
         {
-            controller.forward(loggedInUser.getId(), tweetId, usernames, groupNames);
+            controller.forwardTweet(loggedInUser.getId(), tweetId, usernames, groupNames);
         }
         catch (SQLException ignored)
         {

@@ -1,15 +1,22 @@
 package controller;
 
 import db.Database;
+import exceptions.messages.ChatCreationFailed;
 import model.Chat;
 import model.Message;
 import model.Profile;
+import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import response.responses.messages.NewChatResponse;
 
 import java.sql.SQLException;
 import java.util.*;
 
 public class ChatController
 {
+    private static final Logger logger = LogManager.getLogger(ChatController.class);
+
     public List<Long> getChatroom(Long userId, Long chatId)
     {
         List<Long> messages = new LinkedList<>();
@@ -31,7 +38,11 @@ public class ChatController
                     messages.add(messageId);
                 }
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while getting chatroom %s", chatId));
+        }
 
         return messages;
     }
@@ -50,7 +61,11 @@ public class ChatController
                 Chat chat = Database.getDB().loadChat(id);
                 chatsMap.put(- getLastMessageTime(chat), id);
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while getting messages list for user %s", userId));
+        }
 
         TreeMap<Long, Long> sortedChatsMap = new TreeMap<>(chatsMap);
         List<Long> sortedChatsList = new LinkedList<>();
@@ -87,15 +102,17 @@ public class ChatController
         if (chat.getMessages().size() != 0)
         {
             long messageId = chat.getMessages().get(chat.getMessages().size() - 1);
+
             Message message = null;
             try
             {
                 message = Database.getDB().loadMessage(messageId);
             }
-            catch (SQLException throwable)
+            catch (SQLException ignored)
             {
-                throwable.printStackTrace();
+                logger.error(String.format("database error while getting message with id %s", messageId));
             }
+
             if (message ==  null)
             {
                 return 0;
@@ -127,9 +144,9 @@ public class ChatController
                     }
                 }
             }
-            catch (SQLException throwable)
+            catch (SQLException ignored)
             {
-                throwable.printStackTrace();
+                logger.error("database error in counting unseen messages");
             }
         }
         return cnt;
@@ -157,8 +174,94 @@ public class ChatController
                 }
             }
 
-        } catch (SQLException ignored) {}
-
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while finding pv with users %s, %s", userId1, userId2));
+        }
         return pv;
+    }
+
+    public NewChatResponse newChat(User loggedInUser, String username, String chatName)
+    {
+        if (username.equals(""))
+        {
+            try
+            {
+                Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
+                Chat chat = new Chat(loggedInUser, chatName);
+                chat = Database.getDB().saveChat(chat);
+                profile.addToChats(chat.getId());
+                Database.getDB().saveProfile(profile);
+                logger.info(String.format("new chat was created with id: %s", chat.getId()));
+            }
+            catch (SQLException ignored)
+            {
+                logger.error("database error while saving new created chat");
+                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
+            }
+        }
+        else if (chatName.equals(""))
+        {
+            try
+            {
+                User otherUser = Database.getDB().loadUser(username);
+                Profile loggedInUserProfile = Database.getDB().loadProfile(loggedInUser.getId());
+                Profile otherUserProfile = Database.getDB().loadProfile(otherUser.getId());
+                if (!otherUserProfile.getBlocked().contains(loggedInUserProfile.getId()) && !otherUser.isDeleted() && !otherUser.isDeactivated()
+                        && (otherUserProfile.getFollowers().contains(loggedInUserProfile.getId()) || otherUserProfile.getFollowings().contains(loggedInUserProfile.getId())))
+                {
+                    Chat chat = new Chat(loggedInUser, otherUser);
+                    chat = Database.getDB().saveChat(chat);
+                    loggedInUserProfile.addToChats(chat.getId());
+                    otherUserProfile.addToChats(chat.getId());
+                    Database.getDB().saveProfile(loggedInUserProfile);
+                    Database.getDB().saveProfile(otherUserProfile);
+                    logger.info(String.format("new pv was created with id: %s", chat.getId()));
+                }
+            }
+            catch (SQLException ignored)
+            {
+                logger.error("database error while saving new created chat");
+                return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
+            }
+        }
+        return new NewChatResponse(null, null);
+    }
+
+    public void addMember(Long chatId, String username)
+    {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(Database.getDB().loadUser(username).getId());
+            Chat chat = Database.getDB().loadChat(chatId);
+            chat.getUsers().add(profile.getId());
+            profile.getChats().add(chatId);
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveChat(chat);
+            logger.debug(String.format("user with username %s was added to chat %s", username, chatId));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while adding user with username %s to chat %s", username, chatId));
+        }
+    }
+
+    public void leaveGroup(User loggedInUser, Long chatId)
+    {
+        try
+        {
+            Profile profile = Database.getDB().loadProfile(loggedInUser.getId());
+            Chat chat = Database.getDB().loadChat(chatId);
+            chat.getUsers().remove(profile.getId());
+            profile.getChats().remove(chatId);
+            Database.getDB().saveProfile(profile);
+            Database.getDB().saveChat(chat);
+            logger.debug(String.format("user %s left group %s", profile.getId(), chat.getId()));
+        }
+        catch (SQLException ignored)
+        {
+            logger.error(String.format("database error while leaving group %s", chatId));
+        }
     }
 }

@@ -243,6 +243,7 @@ public class TweetController
     {
         User ownerUser = Database.getDB().loadUser(tweet.getOwner());
         Profile ownerProfile = Database.getDB().loadProfile(tweet.getOwner());
+        Profile viewerProfile = Database.getDB().loadProfile(viewer.getId());
 
         if (ownerUser.getId().equals(viewer.getId()))
         {
@@ -262,6 +263,10 @@ public class TweetController
             return false;
         }
         if (ownerProfile.getBlocked().contains(viewer.getId()))
+        {
+            return false;
+        }
+        if (viewerProfile.getMuted().contains(tweet.getOwner()))
         {
             return false;
         }

@@ -502,3 +502,7 @@
 2021-08-18 11:21:02.199 [Thread-4] DEBUG controller.server.ClientHandler - user 8 logged in
 2021-08-18 11:21:45.635 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-18 11:21:53.162 [Thread-5] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 12:05:29.930 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 12:05:38.489 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 12:06:06.541 [Thread-3] DEBUG controller.server.ClientHandler - user 8 changed follow status for user 4
+2021-08-18 12:06:29.659 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 82

@@ -13,41 +13,67 @@ public class ListsController
 {
     public List<List<Long>> getFollowers(long userId)
     {
+        List<Long> followers = new LinkedList<>();
+
         try
         {
             Profile profile = Database.getDB().loadProfile(userId);
-            return createList(profile.getFollowers());
+
+            for (Long follower : profile.getFollowers())
+            {
+                User followerUser = Database.getDB().loadUser(follower);
+                if (!followerUser.isDeleted() && !followerUser.isDeactivated())
+                {
+                    followers.add(follower);
+                }
+            }
         }
-        catch (SQLException ignored)
-        {
-            return null;
-        }
+        catch (SQLException ignored) {}
+
+        return createList(followers);
     }
 
     public List<List<Long>> getFollowings(long userId)
     {
+        List<Long> followings = new LinkedList<>();
+
         try
         {
             Profile profile = Database.getDB().loadProfile(userId);
-            return createList(profile.getFollowings());
+
+            for (Long following : profile.getFollowings())
+            {
+                User followingUser = Database.getDB().loadUser(following);
+                if (!followingUser.isDeleted() && !followingUser.isDeactivated())
+                {
+                    followings.add(following);
+                }
+            }
         }
-        catch (SQLException ignored)
-        {
-            return null;
-        }
+        catch (SQLException ignored) {}
+
+        return createList(followings);
     }
 
     public List<List<Long>> getBlackList(long userId)
     {
+        List<Long> blackList = new LinkedList<>();
+
         try
         {
             Profile profile = Database.getDB().loadProfile(userId);
-            return createList(profile.getBlocked());
-        }
-        catch (SQLException ignored)
-        {
-            return null;
-        }
+
+            for (Long blocked : profile.getBlocked())
+            {
+                User blockedUser = Database.getDB().loadUser(blocked);
+                if (!blockedUser.isDeleted() && !blockedUser.isDeactivated())
+                {
+                    blackList.add(blocked);
+                }
+            }
+        } catch (SQLException ignored) {}
+
+        return createList(blackList);
     }
 
     public List<List<Long>> getNotifications(long userId)

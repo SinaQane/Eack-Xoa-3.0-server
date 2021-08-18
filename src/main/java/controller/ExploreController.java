@@ -105,7 +105,7 @@ public class ExploreController
         {
             if (user.getUsername().contains(searched) || user.getName().contains(searched))
             {
-                if (!user.isDeactivated())
+                if (!user.isDeactivated() && !user.isDeleted())
                 {
                     users.add(user);
                 }

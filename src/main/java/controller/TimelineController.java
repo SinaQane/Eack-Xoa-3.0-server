@@ -2,6 +2,8 @@ package controller;
 
 import db.Database;
 import model.Profile;
+import model.Tweet;
+import model.User;
 import util.Utilities;
 
 import java.sql.SQLException;
@@ -30,20 +32,31 @@ public class TimelineController
                 }
             }
 
-            UserController controller = new UserController();
+            UserController userController = new UserController();
 
             for (Long user : users)
             {
-                unsortedTimeline.putAll(controller.getHomePageTweetsHashMap(Database.getDB().loadProfile(user)));
+                unsortedTimeline.putAll(userController.getHomePageTweetsHashMap(Database.getDB().loadProfile(user)));
             }
         } catch (SQLException ignored) {}
 
         List<Long[]> timeline = new LinkedList<>();
-
         Map<Long[], Long> sortedTimeline = Utilities.sortByValue(unsortedTimeline);
+
+        TweetController tweetController = new TweetController();
+
         for (Map.Entry<Long[], Long> e : sortedTimeline.entrySet())
         {
-            timeline.add(0, e.getKey());
+            try
+            {
+                User user = Database.getDB().loadUser(userId);
+                Tweet tweet = Database.getDB().loadTweet(e.getKey()[0]);
+
+                if (tweetController.isValid(user, tweet))
+                {
+                    timeline.add(0, e.getKey());
+                }
+            } catch (SQLException ignored) {}
         }
 
         return createList(timeline);
@@ -52,14 +65,20 @@ public class TimelineController
     public List<List<Long[]>> getBookmarks(long userId)
     {
         List<Long[]> bookmarks = new LinkedList<>();
+        TweetController controller = new TweetController();
 
         try
         {
             Profile profile = Database.getDB().loadProfile(userId);
+            User user = Database.getDB().loadUser(userId);
 
             for (Long id : profile.getSavedTweets())
             {
-                bookmarks.add(new Long[]{id, -1L});
+                Tweet tweet = Database.getDB().loadTweet(id);
+                if (controller.isValid(user, tweet))
+                {
+                    bookmarks.add(new Long[]{id, -1L});
+                }
             }
         } catch (SQLException ignored) {}
 

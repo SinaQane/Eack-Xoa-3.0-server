@@ -933,13 +933,17 @@ public class ClientHandler extends Thread implements EventVisitor
                 User otherUser = Database.getDB().loadUser(username);
                 Profile loggedInUserProfile = Database.getDB().loadProfile(loggedInUser.getId());
                 Profile otherUserProfile = Database.getDB().loadProfile(otherUser.getId());
-                Chat chat = new Chat(loggedInUser, otherUser);
-                chat = Database.getDB().saveChat(chat);
-                loggedInUserProfile.addToChats(chat.getId());
-                otherUserProfile.addToChats(chat.getId());
-                Database.getDB().saveProfile(loggedInUserProfile);
-                Database.getDB().saveProfile(otherUserProfile);
-                logger.info(String.format("new pv was created with id: %s", chat.getId()));
+                if (!otherUserProfile.getBlocked().contains(loggedInUserProfile.getId()) && !otherUser.isDeleted() && !otherUser.isDeactivated()
+                        && (otherUserProfile.getFollowers().contains(loggedInUserProfile.getId()) || otherUserProfile.getFollowings().contains(loggedInUserProfile.getId())))
+                {
+                    Chat chat = new Chat(loggedInUser, otherUser);
+                    chat = Database.getDB().saveChat(chat);
+                    loggedInUserProfile.addToChats(chat.getId());
+                    otherUserProfile.addToChats(chat.getId());
+                    Database.getDB().saveProfile(loggedInUserProfile);
+                    Database.getDB().saveProfile(otherUserProfile);
+                    logger.info(String.format("new pv was created with id: %s", chat.getId()));
+                }
             }
             catch (SQLException ignored)
             {

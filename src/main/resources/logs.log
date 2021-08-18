@@ -495,3 +495,10 @@
 2021-08-18 01:53:30.246 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in
 2021-08-18 01:56:47.972 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-18 01:56:48.129 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 11:12:05.395 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 11:12:15.466 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 11:12:35.427 [Thread-3] FATAL controller.server.ClientHandler - user 8 changed their account settings
+2021-08-18 11:20:53.769 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 11:21:02.199 [Thread-4] DEBUG controller.server.ClientHandler - user 8 logged in
+2021-08-18 11:21:45.635 [Thread-5] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-18 11:21:53.162 [Thread-5] DEBUG controller.server.ClientHandler - user 8 logged in

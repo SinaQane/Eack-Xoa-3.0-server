@@ -53,10 +53,11 @@ public class AuthController
                 }
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting user %s", username));
+            logger.error(String.format("%s: database error while getting user %s", e, username));
         }
+
         return new LoginResponse(null, "", new LoginFailed("entered user doesn't exist"));
     }
 
@@ -74,10 +75,11 @@ public class AuthController
             logger.debug(String.format("user %s logged in", user.getId()));
             return new OfflineLoginResponse(user, tokenGenerator.newToken());
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting user with id: %s", id));
+            logger.error(String.format("%s: database error while getting user with id: %s", e, id));
         }
+
         return new OfflineLoginResponse(null, "");
     }
 
@@ -145,9 +147,9 @@ public class AuthController
             logger.debug(String.format("user %s signed up", user.getId()));
             return new SignUpResponse(user, "", null);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while saving a new user");
+            logger.error(String.format("%s: database error while saving a new user", e));
         }
 
         return new SignUpResponse(null, "", new SignUpFailed("signup failed for some internal reason"));

@@ -24,7 +24,11 @@ public class GroupController
         {
             Profile profile = Database.getDB().loadProfile(userId);
             groups = profile.getGroups();
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while loading profile %s", e, userId));
+        }
 
         List<List<Long>> result = new LinkedList<>();
 
@@ -105,9 +109,9 @@ public class GroupController
                 Database.getDB().saveGroup(group);
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while managing group %s", id));
+            logger.error(String.format("%s: database error while managing group %s", e, id));
         }
     }
 
@@ -118,7 +122,11 @@ public class GroupController
         try
         {
             profile = Database.getDB().loadProfile(profileId);
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while loading profile %s", e, profileId));
+        }
 
         if (profile != null)
         {
@@ -129,10 +137,11 @@ public class GroupController
                 {
                     group = Database.getDB().loadGroup(groupId);
                 }
-                catch (SQLException throwable)
+                catch (SQLException e)
                 {
-                    throwable.printStackTrace();
+                    logger.error(String.format("%s: database error while loading group %s", e, groupId));
                 }
+
                 assert group != null;
                 if (group.getTitle().equals(groupName))
                 {

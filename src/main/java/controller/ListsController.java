@@ -4,6 +4,8 @@ import db.Database;
 import model.Notification;
 import model.Profile;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public class ListsController
 {
+    private static final Logger logger = LogManager.getLogger(ListsController.class);
+
     public List<List<Long>> getFollowers(long userId)
     {
         List<Long> followers = new LinkedList<>();
@@ -28,7 +32,10 @@ public class ListsController
                 }
             }
         }
-        catch (SQLException ignored) {}
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s's followers", e, userId));
+        }
 
         return createList(followers);
     }
@@ -50,7 +57,10 @@ public class ListsController
                 }
             }
         }
-        catch (SQLException ignored) {}
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s's followings", e, userId));
+        }
 
         return createList(followings);
     }
@@ -71,7 +81,11 @@ public class ListsController
                     blackList.add(blocked);
                 }
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s's blacklist", e, userId));
+        }
 
         return createList(blackList);
     }
@@ -97,7 +111,11 @@ public class ListsController
                 notifications.add(request.getId());
             }
         }
-        catch (SQLException ignored) {return null;}
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s's notifications", e, userId));
+            return null;
+        }
 
         return createList(notifications);
     }

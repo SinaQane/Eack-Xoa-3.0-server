@@ -101,9 +101,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetChatResponse(Database.getDB().loadChat(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting chat with id: %s", id));
+            logger.error(String.format("%s: database error while getting chat with id: %s", e, id));
             return new GetChatResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetChatResponse(null, new DatabaseError("given chat id doesn't exist"));
@@ -118,9 +119,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetGroupResponse(Database.getDB().loadGroup(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting group with id: %s", id));
+            logger.error(String.format("%s: database error while getting group with id: %s", e, id));
             return new GetGroupResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetGroupResponse(null, new DatabaseError("given group id doesn't exist"));
@@ -135,9 +137,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetMessageResponse(Database.getDB().loadMessage(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting message with id: %s", id));
+            logger.error(String.format("%s: database error while getting message with id: %s", e, id));
             return new GetMessageResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetMessageResponse(null, new DatabaseError("given message id doesn't exist"));
@@ -152,9 +155,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetNotificationResponse(Database.getDB().loadNotification(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting notification with id: %s", id));
+            logger.error(String.format("%s: database error while getting notification with id: %s", e, id));
             return new GetNotificationResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetNotificationResponse(null, new DatabaseError("given notification id doesn't exist"));
@@ -169,9 +173,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetTweetResponse(Database.getDB().loadTweet(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting tweet with id: %s", id));
+            logger.error(String.format("%s: database error while getting tweet with id: %s", e, id));
             return new GetTweetResponse(null, new DatabaseError(e.getMessage()));
         }
         return new GetTweetResponse(null, new DatabaseError("given tweet id doesn't exist"));
@@ -186,9 +191,10 @@ public class ClientHandler extends Thread implements EventVisitor
             {
                 return new GetUserResponse(Database.getDB().loadUser(id), Database.getDB().loadProfile(id), null);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting user with id: %s", id));
+            logger.error(String.format("%s: database error while getting user with id: %s", e, id));
             return new GetUserResponse(null, null, new DatabaseError(e.getMessage()));
         }
         return new GetUserResponse(null, null, new DatabaseError("given user id doesn't exist"));
@@ -313,9 +319,9 @@ public class ClientHandler extends Thread implements EventVisitor
             Tweet tweet = Database.getDB().loadTweet(tweetId);
             return new ViewTweetResponse(tweet, comments);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading tweet with id: %s", tweetId));
+            logger.error(String.format("%s: database error while loading tweet with id: %s", e, tweetId));
         }
 
         return new ViewTweetResponse(null, null);
@@ -332,9 +338,9 @@ public class ClientHandler extends Thread implements EventVisitor
             Tweet tweet = Database.getDB().loadTweet(tweetId);
             return new RefreshTweetResponse(tweet, comments);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading tweet with id: %s", tweetId));
+            logger.error(String.format("%s: database error while loading tweet with id: %s", e, tweetId));
         }
 
         return new RefreshTweetResponse(null, null);
@@ -351,9 +357,9 @@ public class ClientHandler extends Thread implements EventVisitor
             User user = Database.getDB().loadUser(userId);
             return new ViewUserResponse(user, tweets);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading user with id: %s", userId));
+            logger.error(String.format("%s: database error while loading user with id: %s", e, userId));
         }
 
         return new ViewUserResponse(null, null);
@@ -370,9 +376,9 @@ public class ClientHandler extends Thread implements EventVisitor
             User user = Database.getDB().loadUser(userId);
             return new RefreshUserResponse(user, tweets);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading user with id: %s", userId));
+            logger.error(String.format("%s: database error while loading user with id: %s", e, userId));
         }
 
         return new RefreshUserResponse(null, null);
@@ -439,9 +445,9 @@ public class ClientHandler extends Thread implements EventVisitor
             logger.fatal(String.format("user %s changed their account settings", userId));
             loggedInUser = Database.getDB().loadUser(loggedInUser.getId());
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while changing user settings with id: %s", userId));
+            logger.error(String.format("%s: database error while changing user settings with id: %s", e, userId));
         }
 
         return new SettingsResponse(online, null, null);
@@ -502,9 +508,9 @@ public class ClientHandler extends Thread implements EventVisitor
             User user = Database.getDB().loadUser(userId);
             return new ViewProfileResponse(user, tweets);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading user with id: %s", userId));
+            logger.error(String.format("%s: database error while loading user with id: %s", e, userId));
         }
 
         return new ViewProfileResponse(null, null);
@@ -521,9 +527,9 @@ public class ClientHandler extends Thread implements EventVisitor
             User user = Database.getDB().loadUser(userId);
             return new RefreshProfileResponse(user, tweets);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading user with id: %s", userId));
+            logger.error(String.format("%s: database error while loading user with id: %s", e, userId));
         }
 
         return new RefreshProfileResponse(null, null);
@@ -613,9 +619,9 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             Database.getDB().receivedAllMessages(userId);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while setting all %s messages received", userId));
+            logger.error(String.format("%s: database error while setting all %s messages received", e, userId));
         }
 
         return new ReceivedAllMessagesResponse(null);
@@ -680,9 +686,9 @@ public class ClientHandler extends Thread implements EventVisitor
             Database.getDB().saveMessage(message);
             logger.debug(String.format("message %s was just edited", form.getId()));
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while editing message with id: %s", form.getId()));
+            logger.error(String.format("%s: database error while editing message with id: %s", e, form.getId()));
         }
 
         return new EditMessageResponse(null);
@@ -704,9 +710,9 @@ public class ClientHandler extends Thread implements EventVisitor
             Database.getDB().saveMessage(message);
             logger.debug(String.format("message %s was just deleted", messageId));
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while deleting message with id: %s", messageId));
+            logger.error(String.format("%s: database error while deleting message with id: %s", e, messageId));
         }
 
         return new DeleteMessageResponse(null);
@@ -846,9 +852,9 @@ public class ClientHandler extends Thread implements EventVisitor
         {
             controller.forwardTweet(loggedInUser.getId(), tweetId, usernames, groupNames);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while forwarding tweet %s", tweetId));
+            logger.error(String.format("%s: database error while forwarding tweet %s", e, tweetId));
         }
 
         logger.debug(String.format("tweet with id %s was forwarded to a bunch of people", tweetId));

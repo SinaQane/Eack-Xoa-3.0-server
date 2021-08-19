@@ -40,9 +40,9 @@ public class MessageController
                         usersId.add(user.getId());
                     }
                 }
-                catch (SQLException ignored)
+                catch (SQLException e)
                 {
-                    logger.error(String.format("database error while loading user: %s", username));
+                    logger.error(String.format("%s: database error while loading user: %s", e, username));
                 }
             }
         }
@@ -67,9 +67,9 @@ public class MessageController
         {
             tweet = Database.getDB().loadTweet(tweetId);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while loading tweet: %s", tweetId));
+            logger.error(String.format("%s: database error while loading tweet: %s", e, tweetId));
         }
 
         for (Long userId : usersId)
@@ -85,9 +85,9 @@ public class MessageController
                     pv.addToMessages(message.getId());
                     Database.getDB().saveChat(pv);
                 }
-                catch (SQLException ignored)
+                catch (SQLException e)
                 {
-                    logger.error(String.format("database error while forwarding tweet: %s", tweetId));
+                    logger.error(String.format("%s: database error while forwarding tweet: %s", e, tweetId));
                 }
             }
         }
@@ -118,9 +118,9 @@ public class MessageController
 
             logger.info(String.format("new message was just sent with id: %s", message.getId()));
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while saving new message");
+            logger.error(String.format("%s: database error while saving new message", e));
         }
     }
 
@@ -136,9 +136,9 @@ public class MessageController
                 Chat chat = Database.getDB().loadChat(message.getChatId());
                 chat.addToMessages(message.getId());
                 Database.getDB().saveChat(chat);
-            } catch (SQLException ignored)
+            } catch (SQLException e)
             {
-                logger.error("database error while saving received offline message");
+                logger.error(String.format("%s: database error while saving received offline message", e));
             }
         }
     }

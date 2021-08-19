@@ -49,9 +49,9 @@ public class SettingsController
             Database.getDB().saveUser(user);
             Database.getDB().saveProfile(profile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while editing user %s", userId));
+            logger.error(String.format("%s: database error while editing user %s", e, userId));
         }
     }
 
@@ -63,9 +63,9 @@ public class SettingsController
             user.setActive(false);
             Database.getDB().saveUser(user);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while deactivating user %s", userId));
+            logger.error(String.format("%s: database error while deactivating user %s", e, userId));
         }
     }
 
@@ -82,9 +82,9 @@ public class SettingsController
 
             Database.getDB().saveUser(user);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while deleting account for user %s", userId));
+            logger.error(String.format("%s: database error while deleting account for user %s", e, userId));
         }
     }
 }

@@ -30,9 +30,9 @@ public class RequestController
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while accepting notification %s", notificationId));
+            logger.error(String.format("%s: database error while accepting notification %s", e, notificationId));
         }
     }
 
@@ -51,9 +51,9 @@ public class RequestController
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while rejecting notification %s", notificationId));
+            logger.error(String.format("%s: database error while rejecting notification %s", e, notificationId));
         }
     }
 
@@ -77,9 +77,9 @@ public class RequestController
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while rejecting notification %s", notificationId));
+            logger.error(String.format("%s: database error while rejecting notification %s", e, notificationId));
         }
     }
 }

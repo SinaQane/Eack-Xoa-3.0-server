@@ -2,7 +2,6 @@ package util;
 
 import config.Config;
 import constants.Constants;
-import controller.server.ClientHandler;
 import db.Database;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Validations
 {
-    private static final Logger logger = LogManager.getLogger(ClientHandler.class);
+    private static final Logger logger = LogManager.getLogger(Validations.class);
 
     // Email regex
     private final Pattern EMAIL_REGEX;

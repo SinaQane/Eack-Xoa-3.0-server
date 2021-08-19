@@ -4,12 +4,16 @@ import controller.server.SocketController;
 import db.Database;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import view.AddBotFrame;
 
 import java.sql.SQLException;
 
 public class Main extends Application
 {
+    private static final Logger logger = LogManager.getLogger(Main.class);
+
     public static void main(String[] args)
     {
         String url = new Config(Constants.CONFIG).getProperty(String.class, "db_url");
@@ -21,7 +25,7 @@ public class Main extends Application
         }
         catch (SQLException throwable)
         {
-            throwable.printStackTrace();
+            logger.error(String.format("%s: error while connecting to db", throwable));
         }
 
         SocketController socketController = new SocketController(new Config(Constants.CONFIG));

@@ -55,9 +55,9 @@ public class UserController
             Database.getDB().saveProfile(ourUserProfile);
             Database.getDB().saveProfile(otherUserProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while changing %s's follow status for %s", ourUser, otherUser));
+            logger.error(String.format("%s: database error while changing %s's follow status for %s", e, ourUser, otherUser));
         }
     }
 
@@ -78,9 +78,9 @@ public class UserController
 
             Database.getDB().saveProfile(ourUserProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while muting %s for %s", otherUser, ourUser));
+            logger.error(String.format("%s: database error while muting %s for %s", e, otherUser, ourUser));
         }
     }
 
@@ -106,9 +106,9 @@ public class UserController
             Database.getDB().saveProfile(ourUserProfile);
             Database.getDB().saveProfile(otherUserProfile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while blocking %s for %s", otherUser, ourUser));
+            logger.error(String.format("%s: database error while blocking %s for %s", e, otherUser, ourUser));
         }
     }
 
@@ -136,7 +136,11 @@ public class UserController
                     homePageTweets.add(tweetId);
                 }
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s tweets", e, userId));
+        }
 
         for (int i = 0; i < homePageTweets.size(); i = i + 2)
         {
@@ -193,9 +197,9 @@ public class UserController
             {
                 tweet = Database.getDB().loadTweet(userTweet);
             }
-            catch (SQLException throwable)
+            catch (SQLException e)
             {
-                throwable.printStackTrace();
+                logger.error(String.format("%s: database error while getting tweet %s", e, userTweet));
             }
             assert tweet != null;
             homePageTweets.put(new Long[]{userTweet, -1L}, tweet.getTweetDate().getTime());
@@ -208,9 +212,9 @@ public class UserController
             {
                 tweet = Database.getDB().loadTweet(retweetedTweet);
             }
-            catch (SQLException throwable)
+            catch (SQLException e)
             {
-                throwable.printStackTrace();
+                logger.error(String.format("%s: database error while getting tweet %s", e, retweetedTweet));
             }
             assert tweet != null;
             homePageTweets.put(new Long[]{retweetedTweet, profile.getId()}, tweet.getTweetDate().getTime() + 1);

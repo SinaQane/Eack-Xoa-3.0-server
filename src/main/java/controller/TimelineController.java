@@ -4,6 +4,8 @@ import db.Database;
 import model.Profile;
 import model.Tweet;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.Utilities;
 
 import java.sql.SQLException;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 public class TimelineController
 {
+    private static final Logger logger = LogManager.getLogger(TimelineController.class);
+
     public List<List<Long[]>> getTimeline(long userId)
     {
         HashMap<Long[], Long> unsortedTimeline = new HashMap<>();
@@ -38,7 +42,11 @@ public class TimelineController
             {
                 unsortedTimeline.putAll(userController.getHomePageTweetsHashMap(Database.getDB().loadProfile(user)));
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while generating timeline for user %s", e, userId));
+        }
 
         List<Long[]> timeline = new LinkedList<>();
         Map<Long[], Long> sortedTimeline = Utilities.sortByValue(unsortedTimeline);
@@ -56,8 +64,13 @@ public class TimelineController
                 {
                     timeline.add(0, e.getKey());
                 }
-            } catch (SQLException ignored) {}
+            }
+            catch (SQLException ex)
+            {
+                logger.error(String.format("%s: database error while validating sorted timeline for user %s", ex, userId));
+            }
         }
+
         return createList(timeline);
     }
 
@@ -79,7 +92,12 @@ public class TimelineController
                     bookmarks.add(new Long[]{id, -1L});
                 }
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while generating bookmarks page for user %s", e, userId));
+        }
+
         return createList(bookmarks);
     }
 

@@ -3,6 +3,8 @@ package controller;
 import db.Database;
 import model.Tweet;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -11,6 +13,8 @@ import java.util.Random;
 
 public class ExploreController
 {
+    private static final Logger logger = LogManager.getLogger(ExploreController.class);
+
     public List<Long> getRandomTweets(long userId)
     {
         List<Tweet> tweets = new LinkedList<>();
@@ -54,7 +58,11 @@ public class ExploreController
                     i++;
                 }
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while generating random tweets", e));
+        }
 
         if (tweets.size() == 0)
         {
@@ -99,7 +107,11 @@ public class ExploreController
                 User user = Database.getDB().loadUser(i);
                 allUsers.add(user);
             }
-        } catch (SQLException ignored) {}
+        }
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while searching for %s", e, searched));
+        }
 
         for (User user : allUsers)
         {

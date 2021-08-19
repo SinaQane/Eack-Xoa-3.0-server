@@ -43,9 +43,9 @@ public class TweetController
                 logger.info(String.format("new tweet was just tweeted with id: %s", tweet.getId()));
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while saving a new tweet");
+            logger.error(String.format("%s: database error while saving a new tweet", e));
         }
     }
 
@@ -72,9 +72,9 @@ public class TweetController
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while upvoting a tweet");
+            logger.error(String.format("%s: database error while upvoting a tweet", e));
         }
     }
 
@@ -101,9 +101,9 @@ public class TweetController
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while downvoting a tweet");
+            logger.error(String.format("%s: database error while downvoting a tweet", e));
         }
     }
 
@@ -128,9 +128,9 @@ public class TweetController
             Database.getDB().saveProfile(profile);
             Database.getDB().saveTweet(tweet);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while retweeting a tweet");
+            logger.error(String.format("%s: database error while retweeting a tweet", e));
         }
     }
 
@@ -151,9 +151,9 @@ public class TweetController
 
             Database.getDB().saveProfile(profile);
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while bookmarking a tweet");
+            logger.error(String.format("%s: database error while bookmarking a tweet", e));
         }
     }
 
@@ -178,9 +178,9 @@ public class TweetController
                 Database.getDB().saveTweet(tweet);
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error("database error while reporting a tweet");
+            logger.error(String.format("%s: database error while reporting a tweet", e));
         }
     }
 
@@ -221,8 +221,9 @@ public class TweetController
                 }
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
+            logger.error(String.format("%s: database error while getting tweet %s comments", e, tweetId));
             return result;
         }
 

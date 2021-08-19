@@ -39,9 +39,9 @@ public class ChatController
                 }
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting chatroom %s", chatId));
+            logger.error(String.format("%s: database error while getting chatroom %s", e, chatId));
         }
 
         return messages;
@@ -62,9 +62,9 @@ public class ChatController
                 chatsMap.put(- getLastMessageTime(chat), id);
             }
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while getting messages list for user %s", userId));
+            logger.error(String.format("%s: database error while getting messages list for user %s", e, userId));
         }
 
         TreeMap<Long, Long> sortedChatsMap = new TreeMap<>(chatsMap);
@@ -108,9 +108,9 @@ public class ChatController
             {
                 message = Database.getDB().loadMessage(messageId);
             }
-            catch (SQLException ignored)
+            catch (SQLException e)
             {
-                logger.error(String.format("database error while getting message with id %s", messageId));
+                logger.error(String.format("%s: database error while getting message with id %s", e, messageId));
             }
 
             if (message ==  null)
@@ -144,9 +144,9 @@ public class ChatController
                     }
                 }
             }
-            catch (SQLException ignored)
+            catch (SQLException e)
             {
-                logger.error("database error in counting unseen messages");
+                logger.error(String.format("%s: database error in counting unseen messages", e));
             }
         }
         return cnt;
@@ -175,9 +175,9 @@ public class ChatController
             }
 
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while finding pv with users %s, %s", userId1, userId2));
+            logger.error(String.format("%s: database error while finding pv with users %s, %s", e, userId1, userId2));
         }
         return pv;
     }
@@ -195,9 +195,9 @@ public class ChatController
                 Database.getDB().saveProfile(profile);
                 logger.info(String.format("new chat was created with id: %s", chat.getId()));
             }
-            catch (SQLException ignored)
+            catch (SQLException e)
             {
-                logger.error("database error while saving new created chat");
+                logger.error(String.format("%s: database error while saving new created chat", e));
                 return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
             }
         }
@@ -220,9 +220,9 @@ public class ChatController
                     logger.info(String.format("new pv was created with id: %s", chat.getId()));
                 }
             }
-            catch (SQLException ignored)
+            catch (SQLException e)
             {
-                logger.error("database error while saving new created chat");
+                logger.error(String.format("%s: database error while saving new created chat", e));
                 return new NewChatResponse(null, new ChatCreationFailed("failed to load database"));
             }
         }
@@ -241,9 +241,9 @@ public class ChatController
             Database.getDB().saveChat(chat);
             logger.debug(String.format("user with username %s was added to chat %s", username, chatId));
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while adding user with username %s to chat %s", username, chatId));
+            logger.error(String.format("%s: database error while adding user with username %s to chat %s", e, username, chatId));
         }
     }
 
@@ -259,9 +259,9 @@ public class ChatController
             Database.getDB().saveChat(chat);
             logger.debug(String.format("user %s left group %s", profile.getId(), chat.getId()));
         }
-        catch (SQLException ignored)
+        catch (SQLException e)
         {
-            logger.error(String.format("database error while leaving group %s", chatId));
+            logger.error(String.format("%s: database error while leaving group %s", e, chatId));
         }
     }
 }

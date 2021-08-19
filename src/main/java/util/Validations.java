@@ -2,7 +2,10 @@ package util;
 
 import config.Config;
 import constants.Constants;
+import controller.server.ClientHandler;
 import db.Database;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.regex.Matcher;
@@ -10,11 +13,13 @@ import java.util.regex.Pattern;
 
 public class Validations
 {
+    private static final Logger logger = LogManager.getLogger(ClientHandler.class);
+
     // Email regex
-    private static Pattern EMAIL_REGEX;
+    private final Pattern EMAIL_REGEX;
 
     // International phone number regex (like +989123456789)
-    private static Pattern PHONE_REGEX;
+    private final Pattern PHONE_REGEX;
 
     /* Username regex with these rules:
            Only contains alphanumeric characters, underscore and dot.
@@ -22,7 +27,7 @@ public class Validations
            Underscore and dot can't be next to each other.
            Underscore or dot can't be used multiple times in a row.
            Number of characters must be between 8 and 20. */
-    private static Pattern USERNAME_REGEX;
+    private final Pattern USERNAME_REGEX;
 
     static Validations validations;
 
@@ -49,9 +54,9 @@ public class Validations
         {
             exists = Database.getDB().itemAvailable("username", username);
         }
-        catch (SQLException throwable)
+        catch (SQLException e)
         {
-            throwable.printStackTrace();
+            logger.error(String.format("%s: database error while validating username %s", e, username));
         }
         return exists;
     }
@@ -69,9 +74,9 @@ public class Validations
         {
             exists = Database.getDB().itemAvailable("email", email);
         }
-        catch (SQLException throwable)
+        catch (SQLException e)
         {
-            throwable.printStackTrace();
+            logger.error(String.format("%s: database error while validating email %s", e, email));
         }
         return exists;
     }
@@ -93,9 +98,9 @@ public class Validations
         {
             exists = Database.getDB().itemAvailable("phone_number", phoneNumber);
         }
-        catch (SQLException throwable)
+        catch (SQLException e)
         {
-            throwable.printStackTrace();
+            logger.error(String.format("%s: database error while validating phone number %s", e, phoneNumber));
         }
         return exists;
     }

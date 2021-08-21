@@ -97,16 +97,20 @@ public class ListsController
         {
             profile = Database.getDB().loadProfile(userId);
         }
-        catch (SQLException ignored) {return null;}
+        catch (SQLException e)
+        {
+            logger.error(String.format("%s: database error while getting user %s's notifications", e, userId));
+            return null;
+        }
 
-        List<Long> notifications = profile.getNotifications();
+        List<Long> notifications = new LinkedList<>(profile.getNotifications());
 
         try
         {
             for (Long id : profile.getRequests())
             {
                 User requestedUser = Database.getDB().loadUser(id);
-                Notification request = new Notification(userId, id,  requestedUser.getId() + " wants to follow you.");
+                Notification request = new Notification(userId, id,  requestedUser.getName() + " wants to follow you.");
                 request = Database.getDB().saveNotification(request);
                 notifications.add(request.getId());
             }

@@ -261,7 +261,7 @@ public class Database
         return profile;
     }
 
-    public void saveProfile(Profile profile) throws SQLException
+    public Profile saveProfile(Profile profile) throws SQLException
     {
         boolean exists = rowExists("profiles", profile.getId());
         PreparedStatement statement;
@@ -301,6 +301,11 @@ public class Database
         }
         statement.executeUpdate();
         statement.close();
+        if (!exists)
+        {
+            profile.setId(maxTableId("users"));
+        }
+        return loadProfile(profile.getId());
     }
 
     public void updateLastSeen(long id)

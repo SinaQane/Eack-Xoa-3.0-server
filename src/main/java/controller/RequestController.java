@@ -19,13 +19,18 @@ public class RequestController
         {
             Notification notification = Database.getDB().loadNotification(notificationId);
 
+            User pendingUser = Database.getDB().loadUser(notification.getOwner());
             Profile pendingProfile = Database.getDB().loadProfile(notification.getOwner());
             Profile requestedProfile = Database.getDB().loadProfile(notification.getRequestFrom());
 
             pendingProfile.addToFollowers(notification.getRequestFrom());
             pendingProfile.removeFromRequests(notification.getRequestFrom());
             requestedProfile.removeFromPending(notification.getOwner());
-            requestedProfile.addToFollowers(notification.getOwner());
+            requestedProfile.addToFollowings(notification.getOwner());
+
+            Notification accept = new Notification(requestedProfile.getId(), pendingUser.getUsername() + " accepted your follow request.");
+            accept = Database.getDB().saveNotification(accept);
+            requestedProfile.addToNotifications(accept.getId());
 
             Database.getDB().saveProfile(pendingProfile);
             Database.getDB().saveProfile(requestedProfile);
@@ -72,6 +77,7 @@ public class RequestController
             requestedProfile.removeFromPending(pendingUser.getId());
 
             Notification roast = new Notification(requestedUser.getId(), pendingUser.getUsername() + " rejected your follow request.");
+            roast = Database.getDB().saveNotification(roast);
             requestedProfile.addToNotifications(roast.getId());
 
             Database.getDB().saveProfile(pendingProfile);

@@ -579,3 +579,76 @@
 2021-08-21 12:27:57.597 [Thread-3] DEBUG controller.AuthController - user 6 signed up
 2021-08-21 12:28:03.524 [Thread-3] DEBUG controller.AuthController - user 6 logged in
 2021-08-21 12:30:57.673 [Thread-3] DEBUG controller.server.ClientHandler - user 6 logged out
+2021-08-21 12:43:03.283 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-21 12:43:15.564 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 12:43:30.795 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 1
+2021-08-21 12:43:57.094 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 4
+2021-08-21 12:44:15.795 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 12:44:21.752 [Thread-3] DEBUG controller.AuthController - user 1 logged in
+2021-08-21 12:44:34.895 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 4 was just accepted
+2021-08-21 12:44:41.938 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-21 12:44:50.706 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 12:45:18.894 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 13:01:12.228 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-21 13:01:22.905 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 13:01:29.743 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 19 was just roasted
+2021-08-21 13:04:51.490 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-21 13:04:58.956 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:05:14.242 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 4
+2021-08-21 13:05:21.202 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:05:27.559 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 13:05:33.603 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 20 was just roasted
+2021-08-21 13:05:37.742 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 13:05:42.518 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:06:26.741 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:06:32.514 [Thread-3] DEBUG controller.AuthController - user 6 logged in
+2021-08-21 13:06:43.901 [Thread-3] DEBUG controller.server.ClientHandler - user 6 changed follow status for user 5
+2021-08-21 13:06:52.700 [Thread-3] DEBUG controller.server.ClientHandler - user 6 logged out
+2021-08-21 13:06:58.215 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:07:05.001 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 23 was just accepted
+2021-08-21 13:08:20.441 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:12:56.701 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-21 13:13:05.976 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:13:25.815 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 1
+2021-08-21 13:13:39.257 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 4
+2021-08-21 13:13:46.214 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:13:51.568 [Thread-3] DEBUG controller.AuthController - user 1 logged in
+2021-08-21 13:13:58.315 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 25 was just accepted
+2021-08-21 13:14:03.713 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-21 13:14:18.827 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 13:14:30.813 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 30 was just roasted
+2021-08-21 13:14:35.012 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 13:14:40.666 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:14:59.067 [Thread-3] DEBUG controller.server.ClientHandler - user 5 changed follow status for user 4
+2021-08-21 13:15:15.183 [Thread-3] INFO  controller.ChatController - new pv was created with id: 1
+2021-08-21 13:15:26.131 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 1
+2021-08-21 13:16:03.480 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 2
+2021-08-21 13:16:11.727 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 3
+2021-08-21 13:17:14.812 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:17:21.924 [Thread-3] DEBUG controller.AuthController - user 6 logged in
+2021-08-21 13:17:37.613 [Thread-3] DEBUG controller.server.ClientHandler - user 6 changed follow status for user 5
+2021-08-21 13:17:42.157 [Thread-3] DEBUG controller.server.ClientHandler - user 6 logged out
+2021-08-21 13:17:46.623 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 13:17:59.513 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 36 was just accepted
+2021-08-21 13:18:52.239 [Thread-3] INFO  controller.TweetController - new tweet was just tweeted with id: 13
+2021-08-21 13:19:08.813 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 13:19:27.264 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 13:19:36.812 [Thread-3] DEBUG controller.server.ClientHandler - user 4 changed follow status for user 2
+2021-08-21 13:19:43.413 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 13:19:58.623 [Thread-3] DEBUG controller.AuthController - user 2 logged in
+2021-08-21 13:20:12.213 [Thread-3] DEBUG controller.server.ClientHandler - user 2 changed follow status for user 4
+2021-08-21 13:20:20.813 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-21 13:20:26.423 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 13:20:33.312 [Thread-3] DEBUG controller.server.ClientHandler - follow request with id 40 was just accepted
+2021-08-21 13:20:46.654 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 13:21:06.823 [Thread-3] DEBUG controller.AuthController - user 2 logged in
+2021-08-21 13:21:18.713 [Thread-3] DEBUG controller.server.ClientHandler - user 2 changed follow status for user 5
+2021-08-21 13:21:31.012 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-21 13:21:37.564 [Thread-3] DEBUG controller.AuthController - user 3 logged in
+2021-08-21 13:21:51.113 [Thread-3] DEBUG controller.server.ClientHandler - user 3 changed follow status for user 5
+2021-08-21 13:21:57.712 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged out
+2021-08-21 13:22:08.322 [Thread-3] DEBUG controller.AuthController - user 1 logged in
+2021-08-21 13:22:29.461 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 4
+2021-08-21 13:22:35.524 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 5
+2021-08-21 13:22:43.928 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 6
+2021-08-21 13:22:52.653 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged out

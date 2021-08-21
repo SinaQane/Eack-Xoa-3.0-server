@@ -129,6 +129,7 @@ public class AuthController
         user.setPhoneNumber(form.getPhoneNumber());
         user.setBirthDate(form.getBirthDate());
         user.setEmail(form.getEmail());
+        user.setBio(form.getBio());
 
         String picture = form.getPicture();
         if (picture.equals(""))

@@ -557,3 +557,25 @@
 2021-08-19 16:06:28.522 [Thread-4] INFO  controller.server.ClientHandler - user 4 saved tweet 3
 2021-08-19 16:06:49.051 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged out
 2021-08-19 16:06:51.476 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 12:09:17.984 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-21 12:10:25.599 [Thread-3] DEBUG controller.AuthController - user 1 signed up
+2021-08-21 12:10:32.048 [Thread-3] DEBUG controller.AuthController - user 1 logged in
+2021-08-21 12:11:23.761 [Thread-3] FATAL controller.server.ClientHandler - user 1 changed their account settings
+2021-08-21 12:11:29.000 [Thread-3] DEBUG controller.server.ClientHandler - user 1 logged out
+2021-08-21 12:12:27.566 [Thread-3] DEBUG controller.AuthController - user 2 signed up
+2021-08-21 12:12:33.610 [Thread-3] DEBUG controller.AuthController - user 2 logged in
+2021-08-21 12:14:11.799 [Thread-3] DEBUG controller.server.ClientHandler - user 2 logged out
+2021-08-21 12:15:13.767 [Thread-3] DEBUG controller.AuthController - user 3 signed up
+2021-08-21 12:15:21.149 [Thread-3] DEBUG controller.AuthController - user 3 logged in
+2021-08-21 12:16:14.673 [Thread-3] DEBUG controller.server.ClientHandler - user 3 logged out
+2021-08-21 12:17:09.401 [Thread-3] DEBUG controller.AuthController - user 4 signed up
+2021-08-21 12:17:16.728 [Thread-3] DEBUG controller.AuthController - user 4 logged in
+2021-08-21 12:18:01.285 [Thread-3] FATAL controller.server.ClientHandler - user 4 changed their account settings
+2021-08-21 12:22:00.273 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged out
+2021-08-21 12:22:51.337 [Thread-3] DEBUG controller.AuthController - user 5 signed up
+2021-08-21 12:22:57.584 [Thread-3] DEBUG controller.AuthController - user 5 logged in
+2021-08-21 12:24:44.585 [Thread-3] FATAL controller.server.ClientHandler - user 5 changed their account settings
+2021-08-21 12:24:47.113 [Thread-3] DEBUG controller.server.ClientHandler - user 5 logged out
+2021-08-21 12:27:57.597 [Thread-3] DEBUG controller.AuthController - user 6 signed up
+2021-08-21 12:28:03.524 [Thread-3] DEBUG controller.AuthController - user 6 logged in
+2021-08-21 12:30:57.673 [Thread-3] DEBUG controller.server.ClientHandler - user 6 logged out

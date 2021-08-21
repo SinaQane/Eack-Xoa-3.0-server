@@ -242,7 +242,7 @@ public class ClientHandler extends Thread implements EventVisitor
             return new LogoutResponse(null, new Unauthenticated());
         }
 
-        loggedInUser = null;
+        // loggedInUser = null;
         authToken = "";
 
         logger.debug(String.format("user %s logged out", id));

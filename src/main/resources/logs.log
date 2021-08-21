@@ -509,3 +509,51 @@
 2021-08-18 12:32:27.547 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
 2021-08-18 12:32:35.910 [Thread-3] DEBUG controller.server.ClientHandler - user 4 logged in
 2021-08-18 12:32:59.271 [Thread-3] INFO  controller.server.ClientHandler - new message was just sent with id: 83
+2021-08-19 12:51:48.191 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-19 12:52:20.473 [Thread-3] DEBUG controller.AuthController - user 9 signed up
+2021-08-19 12:52:27.223 [Thread-3] DEBUG controller.AuthController - user 9 logged in
+2021-08-19 12:52:39.204 [Thread-3] INFO  controller.server.ClientHandler - user 9 upvoted tweet 10
+2021-08-19 12:53:02.246 [Thread-3] INFO  controller.server.ClientHandler - user 9 downvoted tweet 10
+2021-08-19 12:53:41.407 [Thread-3] DEBUG controller.server.ClientHandler - user 9 changed follow status for user 8
+2021-08-19 12:53:51.703 [Thread-3] DEBUG controller.server.ClientHandler - user 9 logged out
+2021-08-19 12:59:37.151 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-19 13:00:05.512 [Thread-3] DEBUG controller.AuthController - user 9 logged in
+2021-08-19 13:00:09.064 [Thread-3] DEBUG controller.server.ClientHandler - user 9 logged out
+2021-08-19 13:04:08.621 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-19 13:07:05.586 [Thread-3] DEBUG controller.AuthController - user 8 logged in
+2021-08-19 13:07:09.835 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged out
+2021-08-19 13:07:18.193 [Thread-3] DEBUG controller.AuthController - user 9 logged in
+2021-08-19 13:07:20.933 [Thread-3] DEBUG controller.server.ClientHandler - user 9 logged out
+2021-08-19 15:58:47.937 [Thread-3] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-19 15:58:58.107 [Thread-3] DEBUG controller.AuthController - user 8 logged in
+2021-08-19 15:59:45.851 [Thread-3] INFO  controller.server.ClientHandler - user 8 upvoted tweet 5
+2021-08-19 15:59:55.691 [Thread-3] INFO  controller.server.ClientHandler - user 8 retweeted tweet 5
+2021-08-19 16:00:44.730 [Thread-3] INFO  controller.TweetController - new tweet was just tweeted with id: 11
+2021-08-19 16:01:03.352 [Thread-3] DEBUG controller.server.ClientHandler - user 8 changed follow status for user 4
+2021-08-19 16:01:10.684 [Thread-3] DEBUG controller.server.ClientHandler - user 8 changed follow status for user 4
+2021-08-19 16:01:29.668 [Thread-3] FATAL controller.server.ClientHandler - user 8 changed their account settings
+2021-08-19 16:02:10.750 [Thread-3] DEBUG controller.server.ClientHandler - user 8 changed follow status for user 5
+2021-08-19 16:02:28.379 [Thread-3] INFO  controller.ChatController - new pv was created with id: 8
+2021-08-19 16:02:38.204 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 84
+2021-08-19 16:02:57.684 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 86
+2021-08-19 16:03:33.249 [Thread-3] DEBUG controller.server.ClientHandler - user 8 changed follow status for user 6
+2021-08-19 16:03:47.178 [Thread-3] INFO  controller.ChatController - new pv was created with id: 9
+2021-08-19 16:03:55.997 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 88
+2021-08-19 16:04:24.270 [Thread-4] INFO  controller.server.ClientHandler - application pinged with some client
+2021-08-19 16:04:35.690 [Thread-4] DEBUG controller.AuthController - user 4 logged in
+2021-08-19 16:04:55.201 [Thread-4] INFO  controller.MessageController - new message was just sent with id: 90
+2021-08-19 16:05:08.696 [Thread-3] INFO  controller.MessageController - new message was just sent with id: 93
+2021-08-19 16:05:27.218 [Thread-4] INFO  controller.MessageController - new message was just sent with id: 96
+2021-08-19 16:05:46.676 [Thread-4] INFO  controller.server.ClientHandler - user 4 upvoted tweet 10
+2021-08-19 16:05:50.974 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 10
+2021-08-19 16:05:52.375 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 5
+2021-08-19 16:05:57.775 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 5
+2021-08-19 16:06:06.675 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 3
+2021-08-19 16:06:07.775 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 2
+2021-08-19 16:06:08.874 [Thread-4] INFO  controller.server.ClientHandler - user 4 upvoted tweet 2
+2021-08-19 16:06:10.418 [Thread-4] INFO  controller.server.ClientHandler - user 4 upvoted tweet 3
+2021-08-19 16:06:20.875 [Thread-4] INFO  controller.server.ClientHandler - user 4 retweeted tweet 6
+2021-08-19 16:06:26.875 [Thread-4] INFO  controller.server.ClientHandler - user 4 saved tweet 6
+2021-08-19 16:06:28.522 [Thread-4] INFO  controller.server.ClientHandler - user 4 saved tweet 3
+2021-08-19 16:06:49.051 [Thread-3] DEBUG controller.server.ClientHandler - user 8 logged out
+2021-08-19 16:06:51.476 [Thread-4] DEBUG controller.server.ClientHandler - user 4 logged out

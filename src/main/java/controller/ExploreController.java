@@ -102,7 +102,7 @@ public class ExploreController
         {
             Long allUsersCount = Database.getDB().maxTableId("users");
 
-            for (int i = 0; i < allUsersCount; i++)
+            for (int i = 1; i <= allUsersCount; i++)
             {
                 User user = Database.getDB().loadUser(i);
                 allUsers.add(user);
